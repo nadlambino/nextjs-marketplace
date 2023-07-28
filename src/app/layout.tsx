@@ -1,5 +1,6 @@
-import './globals.css';
+import './../assets/styles/globals.scss';
 import type { Metadata } from 'next';
+import Header from './../components/header';
 
 export const metadata: Metadata = {
   title: 'Marketplace',
@@ -13,7 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Header />
+        <main>{children}</main>
+      </body>
     </html>
   );
 }

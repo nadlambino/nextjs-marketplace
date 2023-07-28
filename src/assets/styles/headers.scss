@@ -1,0 +1,23 @@
+header {
+  @apply flex justify-between p-2 items-end;
+
+  @apply lg:px-10;
+
+  .link-icon {
+    @apply lowercase text-lg bg-gradient-to-r from-primary to-accent to-30% bg-clip-text text-transparent;
+  }
+
+  .market {
+    @apply font-semibold;
+  }
+
+  .place {
+    @apply font-extralight;
+  }
+
+  ul {
+    @apply flex gap-2 text-base font-extralight;
+
+    @apply lg:gap-5;
+  }
+}
