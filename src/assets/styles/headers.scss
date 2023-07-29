@@ -4,7 +4,7 @@ header {
   @apply lg:px-10;
 
   .link-icon {
-    @apply lowercase text-lg bg-gradient-to-r from-accent to-primary to-40% bg-clip-text text-transparent;
+    @apply lowercase text-lg bg-gradient-to-r from-accent to-primary to-60% bg-clip-text text-transparent;
   }
 
   .market {
@@ -12,7 +12,7 @@ header {
   }
 
   .place {
-    @apply font-extralight;
+    @apply font-semibold;
   }
 
   ul {

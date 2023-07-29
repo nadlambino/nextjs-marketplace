@@ -19,7 +19,7 @@ export default function Header() {
           <Link href="/dashboard">Dashboard</Link>
         </li>
         <li>
-          <Link href="/login">Login</Link>
+          <Link href="/api/auth/signin">Sign In</Link>
         </li>
       </ul>
     </header>
