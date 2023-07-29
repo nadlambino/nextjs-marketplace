@@ -16,7 +16,7 @@ header {
   }
 
   ul {
-    @apply flex gap-2 text-base font-extralight;
+    @apply flex gap-2 text-sm font-extralight uppercase;
 
     @apply lg:gap-5;
   }

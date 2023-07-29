@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import './../assets/styles/headers.scss';
+import { getServerSession } from 'next-auth';
 
-export default function Header() {
+export default async function Header() {
+  const session = await getServerSession();
+
   return (
     <header>
       <Link
@@ -13,13 +16,17 @@ export default function Header() {
       </Link>
       <ul>
         <li>
-          <Link href="/">Products</Link>
+          <Link href="/">Shop</Link>
         </li>
         <li>
-          <Link href="/dashboard">Dashboard</Link>
+          <Link href="/cart">Cart</Link>
         </li>
         <li>
-          <Link href="/api/auth/signin">Sign In</Link>
+          {session ? (
+            <Link href="/api/auth/signout">Sign Out</Link>
+          ) : (
+            <Link href="/api/auth/signin">Sign In</Link>
+          )}
         </li>
       </ul>
     </header>
