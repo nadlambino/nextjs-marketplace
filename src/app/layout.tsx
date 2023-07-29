@@ -1,7 +1,7 @@
 import './../assets/styles/globals.scss';
 import type { Metadata } from 'next';
 import Header from '../components/Header';
-import { NextAuthSessionProvider } from '@/providers/NextAuthSessionProvider';
+import { ClientProvider } from '@/providers/ClientProvider';
 
 export const metadata: Metadata = {
   title: 'Marketplace',
@@ -16,10 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NextAuthSessionProvider>
+        <ClientProvider>
           <Header />
           <main>{children}</main>
-        </NextAuthSessionProvider>
+        </ClientProvider>
       </body>
     </html>
   );

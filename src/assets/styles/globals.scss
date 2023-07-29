@@ -7,8 +7,8 @@ body {
   @apply font-opensans text-lg bg-light text-dark font-extralight;
 }
 
-section {
-  @apply p-2;
+main {
+  @apply px-2 mt-12;
 
-  @apply lg:px-10 lg:py-0;
+  @apply lg:px-10;
 }

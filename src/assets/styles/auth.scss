@@ -1,0 +1,11 @@
+form {
+  @apply flex flex-col gap-5 justify-center items-center min-h-[calc(100vh-3rem)] w-full;
+
+  .form-control {
+    @apply w-full;
+  }
+
+  [role='sign-in'] {
+    @apply w-full;
+  }
+}
