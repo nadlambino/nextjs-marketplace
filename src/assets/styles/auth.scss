@@ -9,7 +9,8 @@ form {
     @apply w-full;
   }
 
-  [role='sign-in'] {
+  [role='sign-in'],
+  [role='sign-up'] {
     @apply w-full;
   }
 }

@@ -43,6 +43,7 @@ export default function SignIn() {
       redirect(callbackUrl);
     }
   }, [session]);
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (isLoading) return;

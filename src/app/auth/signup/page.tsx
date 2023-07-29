@@ -1,6 +1,6 @@
 'use client';
 import '@/assets/styles/auth.scss';
-import { FormEvent, useEffect, useRef } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { signIn } from 'next-auth/react';
 import { useSearchParams, redirect } from 'next/navigation';
@@ -13,25 +13,53 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Alert,
 } from '@mui/material';
 import { useMutation } from 'react-query/react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function SignIn() {
+  const router = useRouter();
+  const firstNameRef = useRef<string | null>(null);
+  const lastNameRef = useRef<string | null>(null);
+  const genderRef = useRef<string | null>(null);
+  const birthDateRef = useRef<string | null>(null);
   const emailRef = useRef<string | null>(null);
   const passwordRef = useRef<string | null>(null);
+  const confirmRef = useRef<string | null>(null);
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
   const { data: session, status } = useSession();
-  const { mutate, isLoading } = useMutation({
+  const {
+    mutate,
+    isLoading,
+    data: signUpResponse,
+  } = useMutation({
     mutationFn: () =>
       signIn('credentials', {
+        firstName: firstNameRef.current,
+        lastName: lastNameRef.current,
+        gender: genderRef.current,
+        birthdate: birthDateRef.current,
         email: emailRef.current,
         password: passwordRef.current,
-        redirect: true,
+        redirect: false,
         callbackUrl,
       }),
   });
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (session) {
+      router.refresh();
+      redirect(callbackUrl);
+    }
+
+    if (!session && signUpResponse && signUpResponse.error) {
+      setErrorMessage('Failed to sign up. Please try again later.');
+    }
+  }, [session, signUpResponse]);
 
   useEffect(() => {
     if (session) redirect(callbackUrl);
@@ -39,6 +67,10 @@ export default function SignIn() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (isLoading) return;
+    if (passwordRef.current !== confirmRef.current) {
+      setErrorMessage('Password do not match');
+      return;
+    }
     mutate();
   };
   return (session && status === 'authenticated') || status === 'loading' ? (
@@ -51,13 +83,21 @@ export default function SignIn() {
         onSubmit={handleSubmit}
       >
         <FormControl className="form-control">
+          {errorMessage && (
+            <Alert
+              className="w-full mb-5"
+              severity="error"
+            >
+              {errorMessage}
+            </Alert>
+          )}
           <TextField
             name="firstName"
             type="text"
             label="First name"
             variant="outlined"
             size="small"
-            onChange={(e) => (emailRef.current = e.target.value)}
+            onChange={(e) => (firstNameRef.current = e.target.value)}
             required
           />
         </FormControl>
@@ -68,7 +108,7 @@ export default function SignIn() {
             label="Last name"
             variant="outlined"
             size="small"
-            onChange={(e) => (emailRef.current = e.target.value)}
+            onChange={(e) => (lastNameRef.current = e.target.value)}
             required
           />
         </FormControl>
@@ -79,19 +119,20 @@ export default function SignIn() {
             aria-labelledby="demo-radio-buttons-group-label"
             defaultValue="female"
             name="radio-buttons-group"
+            onChange={(e) => (genderRef.current = e.target.value)}
           >
             <FormControlLabel
-              value="female"
-              control={<Radio />}
-              label="Female"
-            />
-            <FormControlLabel
-              value="male"
+              value="m"
               control={<Radio />}
               label="Male"
             />
             <FormControlLabel
-              value="other"
+              value="f"
+              control={<Radio />}
+              label="Female"
+            />
+            <FormControlLabel
+              value="o"
               control={<Radio />}
               label="Other"
             />
@@ -104,7 +145,7 @@ export default function SignIn() {
             label="Birthday"
             variant="outlined"
             size="small"
-            onChange={(e) => (emailRef.current = e.target.value)}
+            onChange={(e) => (birthDateRef.current = e.target.value)}
             required
             InputLabelProps={{ shrink: true }}
           />
@@ -138,17 +179,17 @@ export default function SignIn() {
             label="Confirm Password"
             variant="outlined"
             size="small"
-            onChange={(e) => (passwordRef.current = e.target.value)}
+            onChange={(e) => (confirmRef.current = e.target.value)}
             required
           />
         </FormControl>
         <Button
           type="submit"
           variant="contained"
-          role="sign-in"
+          role="sign-up"
           disabled={isLoading}
         >
-          Sign In
+          Sign Up
         </Button>
         <FormControl>
           <Typography>

@@ -1,5 +1,4 @@
-import User from '@/models/User';
-import { signIn } from '@/services/auth';
+import { IUser, signIn, signUp } from '@/services/auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -10,10 +9,32 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
+        firstName: {},
+        lastName: {},
+        gender: {},
+        birthdate: {},
       },
       async authorize(credentials, _req) {
+        console.log(credentials);
         if (!credentials?.email || !credentials?.password) return null;
-        return await signIn(credentials.email, credentials.password);
+        if (
+          credentials?.firstName &&
+          credentials?.lastName &&
+          credentials?.gender &&
+          credentials?.birthdate
+        ) {
+          const user: IUser = {
+            firstName: credentials.firstName,
+            lastName: credentials.lastName,
+            gender: credentials.gender,
+            birthdate: credentials.birthdate,
+            email: credentials.email,
+            password: credentials.password,
+          };
+          return await signUp(user);
+        }
+
+        return await signIn(credentials);
       },
     }),
   ],
@@ -22,11 +43,5 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: 'jwt',
-  },
-  callbacks: {
-    async signIn(session) {
-      console.log(session);
-      return true;
-    },
   },
 };
