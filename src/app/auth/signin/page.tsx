@@ -4,8 +4,9 @@ import { FormEvent, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { signIn } from 'next-auth/react';
 import { useSearchParams, redirect } from 'next/navigation';
-import { FormControl, TextField, Button } from '@mui/material';
+import { FormControl, TextField, Button, Typography } from '@mui/material';
 import { useMutation } from 'react-query/react';
+import NextLink from 'next/link';
 
 export default function SignIn() {
   const emailRef = useRef<string | null>(null);
@@ -70,6 +71,11 @@ export default function SignIn() {
         >
           Sign In
         </Button>
+        <FormControl>
+          <Typography>
+            No account yet? <NextLink href="/signup">Sign up here</NextLink>
+          </Typography>
+        </FormControl>
       </form>
     </section>
   );

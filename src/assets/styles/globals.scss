@@ -7,8 +7,16 @@ body {
   @apply font-opensans text-lg bg-light text-dark font-extralight;
 }
 
+* {
+  font-family: 'Open Sans', sans-serif !important;
+}
+
 main {
   @apply px-2 mt-12;
 
   @apply lg:px-10;
+}
+
+a {
+  @apply text-primary;
 }
