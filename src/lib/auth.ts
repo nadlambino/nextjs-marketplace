@@ -1,7 +1,7 @@
+import User from '@/models/User';
+import { signIn } from '@/services/auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-
-const API_URL = process.env.NEXT_PUBLIC_API;
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -13,17 +13,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials, _req) {
         if (!credentials?.email || !credentials?.password) return null;
-
-        const res = await fetch(`${API_URL}/api/users`, {
-          method: 'POST',
-          body: JSON.stringify(credentials),
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const user = await res.json();
-
-        if (res.ok && user) return user;
-
-        return null;
+        return await signIn(credentials.email, credentials.password);
       },
     }),
   ],
@@ -32,5 +22,11 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: 'jwt',
+  },
+  callbacks: {
+    async signIn(session) {
+      console.log(session);
+      return true;
+    },
   },
 };
