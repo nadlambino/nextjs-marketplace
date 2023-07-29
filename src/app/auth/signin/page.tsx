@@ -73,7 +73,8 @@ export default function SignIn() {
         </Button>
         <FormControl>
           <Typography>
-            No account yet? <NextLink href="/signup">Sign up here</NextLink>
+            No account yet?{' '}
+            <NextLink href="/auth/signup">Sign up here</NextLink>
           </Typography>
         </FormControl>
       </form>
