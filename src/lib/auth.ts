@@ -14,24 +14,18 @@ export const authOptions: NextAuthOptions = {
         gender: {},
         birthdate: {},
       },
-      async authorize(credentials, _req) {
-        console.log(credentials);
+      async authorize(credentials, req) {
+        const referer: string = req.headers?.referer || '';
+
         if (!credentials?.email || !credentials?.password) return null;
         if (
           credentials?.firstName &&
           credentials?.lastName &&
           credentials?.gender &&
-          credentials?.birthdate
+          credentials?.birthdate &&
+          referer.indexOf('signup')
         ) {
-          const user: IUser = {
-            firstName: credentials.firstName,
-            lastName: credentials.lastName,
-            gender: credentials.gender,
-            birthdate: credentials.birthdate,
-            email: credentials.email,
-            password: credentials.password,
-          };
-          return await signUp(user);
+          return await signUp(credentials);
         }
 
         return await signIn(credentials);
