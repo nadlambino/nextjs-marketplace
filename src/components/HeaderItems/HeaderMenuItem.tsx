@@ -15,7 +15,7 @@ type HeaderMenuItemProps = {
 export default function HeaderMenuItem({ items, label }: HeaderMenuItemProps) {
   return (
     <>
-      {label && <Divider className="text-xs">{label}</Divider>}
+      {label && <Divider className="menu-item-label">{label}</Divider>}
       {items.map((item, i) => (
         <MenuItem
           key={i}

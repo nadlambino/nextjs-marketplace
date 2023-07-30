@@ -30,8 +30,12 @@ header {
   }
 }
 
+.menu-item-label {
+  @apply text-[10px] font-normal uppercase;
+}
+
 .menu-item {
-  @apply flex gap-1 text-dark uppercase text-xs;
+  @apply flex gap-1 text-dark capitalize text-xs;
 
   svg {
     @apply text-primary font-thin;
