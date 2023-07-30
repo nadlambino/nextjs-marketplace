@@ -3,7 +3,7 @@ import connect from '@/utils/db';
 import { encrypt } from './encryption';
 import { verify } from './encryption';
 
-export interface IUser extends ICredentials {
+export interface IUserBase {
   _id?: string;
   firstName: string;
   lastName: string;
@@ -26,6 +26,8 @@ export interface IUser extends ICredentials {
     bannedUntil?: string;
   };
 }
+
+export interface IUser extends IUserBase, ICredentials {}
 
 export interface ICredentials {
   email: string;
@@ -75,6 +77,7 @@ export const getUserByEmail = async (email: string | undefined | null) => {
 const filterUserInfo = (user: IUser) => {
   return {
     _id: user._id,
+    id: user._id,
     firstName: user.firstName,
     lastName: user.lastName,
     gender: user.gender,

@@ -1,5 +1,5 @@
 header {
-  @apply flex justify-between p-2 items-end fixed w-full h-12 top-0;
+  @apply flex justify-between px-2 items-center fixed w-full h-12 top-0;
 
   @apply lg:px-10;
 
@@ -16,8 +16,6 @@ header {
   }
 
   ul {
-    @apply flex gap-2 text-sm font-extralight uppercase;
-
-    @apply lg:gap-5;
+    @apply flex gap-2 text-sm font-extralight uppercase items-center;
   }
 }

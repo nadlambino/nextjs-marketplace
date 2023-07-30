@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import './../assets/styles/headers.scss';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '@/utils/auth';
+import HeaderMenu from './HeaderItems/HeaderMenu';
 
 export default async function Header() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
 
   return (
     <header>
@@ -16,16 +18,13 @@ export default async function Header() {
       </Link>
       <ul>
         <li>
-          <Link href="/">Shop</Link>
-        </li>
-        <li>
           <Link href="/cart">Cart</Link>
         </li>
         <li>
-          {session ? (
-            <Link href="/api/auth/signout">Sign Out</Link>
+          {session && session.user ? (
+            <HeaderMenu />
           ) : (
-            <Link href="/api/auth/signin">Sign In</Link>
+            <Link href="/auth/signin">Sign In</Link>
           )}
         </li>
       </ul>
