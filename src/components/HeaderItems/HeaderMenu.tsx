@@ -6,11 +6,14 @@ import {
   Menu,
   MenuItem,
   Tooltip,
-  Typography,
 } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { IUserBase } from '@/services/auth';
+import { BiShoppingBag } from 'react-icons/bi';
+import { MdOutlineSell } from 'react-icons/md';
+import { AiOutlineUser, AiOutlineKey, AiOutlineBars } from 'react-icons/ai';
+import HeaderMenuItem, { Item } from './HeaderMenuItem';
 
 export default function HeaderMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -36,6 +39,37 @@ export default function HeaderMenu() {
       callbackUrl: '/',
     });
   };
+
+  const shopItems: Item[] = [
+    {
+      callback: handleClose,
+      label: 'Purchase',
+      icon: <MdOutlineSell size={18} />,
+    },
+    {
+      callback: handleClose,
+      label: 'Orders',
+      icon: <BiShoppingBag size={18} />,
+    },
+    {
+      callback: handleClose,
+      label: 'Products',
+      icon: <AiOutlineBars size={18} />,
+    },
+  ];
+
+  const accountItems: Item[] = [
+    {
+      callback: handleClose,
+      label: 'Profile',
+      icon: <AiOutlineUser size={18} />,
+    },
+    {
+      callback: handleSignOut,
+      label: 'Sign Out',
+      icon: <AiOutlineKey size={18} />,
+    },
+  ];
   return (
     <>
       <Tooltip title="Menu">
@@ -74,9 +108,6 @@ export default function HeaderMenu() {
               ml: -0.5,
               mr: 1,
             },
-            '& .MuiButtonBase-root': {
-              color: '#212121',
-            },
             '&:before': {
               content: '""',
               display: 'block',
@@ -94,32 +125,14 @@ export default function HeaderMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <Divider className="text-xs">Shop</Divider>
-        <MenuItem
-          dense
-          onClick={handleClose}
-        >
-          <Typography>Orders</Typography>
-        </MenuItem>
-        <MenuItem
-          dense
-          onClick={handleClose}
-        >
-          <Typography>Products</Typography>
-        </MenuItem>
-        <Divider className="text-xs">Account</Divider>
-        <MenuItem
-          dense
-          onClick={handleClose}
-        >
-          <Typography>Profile</Typography>
-        </MenuItem>
-        <MenuItem
-          dense
-          onClick={handleSignOut}
-        >
-          <Typography>Sign Out</Typography>
-        </MenuItem>
+        <HeaderMenuItem
+          label="Shop"
+          items={shopItems}
+        />
+        <HeaderMenuItem
+          label="Account"
+          items={accountItems}
+        />
       </Menu>
     </>
   );
