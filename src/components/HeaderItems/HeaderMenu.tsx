@@ -43,7 +43,7 @@ export default function HeaderMenu() {
   const shopItems: Item[] = [
     {
       callback: handleClose,
-      label: 'Purchase',
+      label: 'Purchases',
       icon: <MdOutlineSell size={18} />,
     },
     {
