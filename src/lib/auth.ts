@@ -1,4 +1,4 @@
-import { IUser, signIn, signUp } from '@/services/auth';
+import { signIn, signUp } from '@/services/auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
