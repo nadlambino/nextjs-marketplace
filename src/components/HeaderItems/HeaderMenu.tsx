@@ -47,7 +47,7 @@ export default function HeaderMenu() {
           aria-expanded={open ? 'true' : undefined}
         >
           <Avatar
-            className="bg-primary text-sm"
+            className="avatar-icon"
             sx={{ width: 32, height: 32 }}
           >
             {initials}
@@ -65,7 +65,7 @@ export default function HeaderMenu() {
           elevation: 0,
           sx: {
             overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            filter: 'drop-shadow(0px 2px 3px rgba(0,0,0,0.32))',
             mt: 1.5,
             width: 150,
             '& .MuiAvatar-root': {

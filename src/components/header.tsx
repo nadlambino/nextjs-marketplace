@@ -3,6 +3,7 @@ import './../assets/styles/headers.scss';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/utils/auth';
 import HeaderMenu from './HeaderItems/HeaderMenu';
+import { AiOutlineShoppingCart, AiOutlineKey } from 'react-icons/ai';
 
 export default async function Header() {
   const session = await getServerSession(authOptions);
@@ -18,13 +19,17 @@ export default async function Header() {
       </Link>
       <ul>
         <li>
+          <AiOutlineShoppingCart size={20} />
           <Link href="/cart">Cart</Link>
         </li>
         <li>
           {session && session.user ? (
             <HeaderMenu />
           ) : (
-            <Link href="/auth/signin">Sign In</Link>
+            <>
+              <AiOutlineKey size={20} />
+              <Link href="/auth/signin">Sign In</Link>
+            </>
           )}
         </li>
       </ul>

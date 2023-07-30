@@ -16,6 +16,16 @@ header {
   }
 
   ul {
-    @apply flex gap-2 text-sm font-extralight uppercase items-center;
+    @apply flex gap-2 text-sm font-normal capitalize items-center text-primary;
+
+    @apply lg:gap-5;
+
+    li {
+      @apply flex gap-1 items-center;
+    }
+  }
+
+  .avatar-icon {
+    @apply bg-primary text-sm;
   }
 }
