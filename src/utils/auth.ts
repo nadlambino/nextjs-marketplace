@@ -1,5 +1,5 @@
-import { signIn, signUp } from '@/services/auth';
-import type { NextAuthOptions } from 'next-auth';
+import { getUserByEmail, signIn, signUp } from '@/services/auth';
+import type { Awaitable, NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 export const authOptions: NextAuthOptions = {
@@ -25,10 +25,10 @@ export const authOptions: NextAuthOptions = {
           credentials?.birthdate &&
           referer.indexOf('signup')
         ) {
-          return await signUp(credentials);
+          return (await signUp(credentials)) as Awaitable<any>;
         }
 
-        return await signIn(credentials);
+        return (await signIn(credentials)) as Awaitable<any>;
       },
     }),
   ],
@@ -37,5 +37,11 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: 'jwt',
+  },
+  callbacks: {
+    async session({ session }) {
+      session.user = await getUserByEmail(session.user?.email);
+      return session;
+    },
   },
 };
