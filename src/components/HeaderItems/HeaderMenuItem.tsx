@@ -1,10 +1,12 @@
 import { Divider, MenuItem } from '@mui/material';
+import Link from 'next/link';
 import React, { MouseEventHandler } from 'react';
 
 export type Item = {
   callback: MouseEventHandler;
   label: string;
   icon?: React.ReactNode;
+  href?: string;
 };
 
 type HeaderMenuItemProps = {
@@ -24,8 +26,20 @@ export default function HeaderMenuItem({ items, label }: HeaderMenuItemProps) {
           role="button"
           onClick={item.callback}
         >
-          {item.icon}
-          {item.label}
+          {item.href ? (
+            <Link
+              className="menu-item-link"
+              href={item.href}
+            >
+              {item.icon}
+              {item.label}
+            </Link>
+          ) : (
+            <>
+              {item.icon}
+              {item.label}
+            </>
+          )}
         </MenuItem>
       ))}
     </>

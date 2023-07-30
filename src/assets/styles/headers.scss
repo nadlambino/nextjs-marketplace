@@ -16,7 +16,7 @@ header {
   }
 
   ul {
-    @apply flex gap-2 text-sm font-normal capitalize items-center text-primary;
+    @apply flex gap-2 py-0 text-sm font-normal capitalize items-center text-primary;
 
     @apply lg:gap-5;
 
@@ -31,13 +31,19 @@ header {
 }
 
 .menu-item-label {
-  @apply text-[10px] font-normal uppercase;
+  @apply text-[8px] font-normal uppercase m-0;
 }
 
-.menu-item {
-  @apply flex gap-1 text-dark capitalize text-xs;
+.menu-item,
+.menu-item-link {
+  @apply flex gap-1 items-center text-dark capitalize text-sm w-full;
 
   svg {
     @apply text-primary font-thin;
   }
+}
+
+ul[role='menu'] {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
