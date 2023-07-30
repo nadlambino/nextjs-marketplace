@@ -77,7 +77,6 @@ export const getUserByEmail = async (email: string | undefined | null) => {
 const filterUserInfo = (user: IUser) => {
   return {
     _id: user._id,
-    id: user._id,
     firstName: user.firstName,
     lastName: user.lastName,
     gender: user.gender,
