@@ -1,6 +1,6 @@
 import './../assets/styles/globals.scss';
 import type { Metadata } from 'next';
-import Header from '../components/Header';
+import Header from '../components/header';
 import { ClientProvider } from '@/providers/ClientProvider';
 
 export const metadata: Metadata = {
