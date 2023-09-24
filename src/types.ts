@@ -41,15 +41,13 @@ export const CredentialsSchema = z
 			.max(16, 'Password must be at maximum of 16 characters'),
 		confirm: z.string().optional(),
 	})
-	.superRefine(({ password, confirm }, ctx) => {
-		if (password !== confirm && confirm !== undefined) {
-			ctx.addIssue({
-				code: 'custom',
-				message: 'Password did not matched',
-				path: ['confirm'],
-			});
+	.refine(
+		({ password, confirm }) => confirm === undefined || password === confirm,
+		{
+			message: 'Password did not matched',
+			path: ['confirm'],
 		}
-	});
+	);
 
 export type Credentials = z.infer<typeof CredentialsSchema>;
 
