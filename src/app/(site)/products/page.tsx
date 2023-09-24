@@ -5,6 +5,8 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import AddProductButton from '@/app/components/Products/AddProductButton';
+import { Box } from '@mui/material';
 
 type Condition = 'new' | 'used';
 
@@ -416,6 +418,9 @@ const items: Item[] = [
 export default function Products() {
 	return (
 		<Paper sx={{ width: '100%', overflow: 'hidden', mt: 8, mb: 3 }}>
+			<Box className="p-5">
+				<AddProductButton />
+			</Box>
 			<Table
 				stickyHeader
 				aria-label="sticky table"
