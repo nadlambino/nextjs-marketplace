@@ -1,39 +1,58 @@
 import { z } from 'zod';
 
 export const UserBasicInfoSchema = z.object({
-	_id: z.string(),
-	firstName: z.string(),
-	lastName: z.string(),
+	_id: z.string().optional(),
+	firstName: z.string().min(1, 'First name is required'),
+	lastName: z.string().min(1, 'Last name is required'),
 	gender: z.string(),
 	birthdate: z.string(),
-	avatar: z.string(),
-	address: z.object({
-		city: z.string(),
-		street: z.string(),
-		postalCode: z.string(),
-	}),
-	seller: z.object({
-		isBanned: z.boolean(),
-		bannedReason: z.string(),
-		bannedUntil: z.string(),
-	}),
-	buyer: z.object({
-		isBanned: z.boolean(),
-		bannedReason: z.string(),
-		bannedUntil: z.string(),
-	}),
+	avatar: z.string().optional(),
+	address: z
+		.object({
+			city: z.string(),
+			street: z.string(),
+			postalCode: z.string(),
+		})
+		.optional(),
+	seller: z
+		.object({
+			isBanned: z.boolean(),
+			bannedReason: z.string(),
+			bannedUntil: z.string(),
+		})
+		.optional(),
+	buyer: z
+		.object({
+			isBanned: z.boolean(),
+			bannedReason: z.string(),
+			bannedUntil: z.string(),
+		})
+		.optional(),
 });
 
 export type UserBasicInfo = z.infer<typeof UserBasicInfoSchema>;
 
-export const CredentialsSchema = z.object({
-	email: z.string().email('Email should be a valid email address'),
-	password: z
-		.string()
-		.min(8, 'Password must be at least 8 characters')
-		.max(16, 'Password must be at maximum of 16 characters'),
-});
+export const CredentialsSchema = z
+	.object({
+		email: z.string().email('Email should be a valid email address'),
+		password: z
+			.string()
+			.min(8, 'Password must be at least 8 characters')
+			.max(16, 'Password must be at maximum of 16 characters'),
+		confirm: z.string().optional(),
+	})
+	.superRefine(({ password, confirm }, ctx) => {
+		if (password !== confirm && confirm !== undefined) {
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Password did not matched',
+				path: ['confirm'],
+			});
+		}
+	});
 
 export type Credentials = z.infer<typeof CredentialsSchema>;
 
-export interface User extends UserBasicInfo, Credentials {}
+export const UserSchema = UserBasicInfoSchema.and(CredentialsSchema);
+
+export type User = UserBasicInfo & Credentials;

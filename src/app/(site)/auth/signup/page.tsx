@@ -1,6 +1,6 @@
 'use client';
 import './../../../assets/styles/auth.scss';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { signIn } from 'next-auth/react';
 import { useSearchParams, redirect } from 'next/navigation';
@@ -18,16 +18,20 @@ import {
 import { useMutation } from 'react-query/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { User, UserSchema } from '@/types';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function SignIn() {
 	const router = useRouter();
-	const firstNameRef = useRef<string | null>(null);
-	const lastNameRef = useRef<string | null>(null);
-	const genderRef = useRef<string | null>(null);
-	const birthDateRef = useRef<string | null>(null);
-	const emailRef = useRef<string | null>(null);
-	const passwordRef = useRef<string | null>(null);
-	const confirmRef = useRef<string | null>(null);
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors, isSubmitting },
+	} = useForm<User>({
+		resolver: zodResolver(UserSchema),
+	});
 	const searchParams = useSearchParams();
 	const callbackUrl = searchParams.get('callbackUrl') || '/';
 	const { data: session, status } = useSession();
@@ -36,43 +40,28 @@ export default function SignIn() {
 		isLoading,
 		data: signUpResponse,
 	} = useMutation({
-		mutationFn: () =>
+		mutationFn: (data: User) =>
 			signIn('credentials', {
-				firstName: firstNameRef.current,
-				lastName: lastNameRef.current,
-				gender: genderRef.current,
-				birthdate: birthDateRef.current,
-				email: emailRef.current,
-				password: passwordRef.current,
+				...data,
 				redirect: false,
 				callbackUrl,
 			}),
 	});
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	useEffect(() => {
 		if (session) {
+			reset();
 			router.refresh();
 			redirect(callbackUrl);
 		}
-
-		if (!session && signUpResponse && signUpResponse.error) {
-			setErrorMessage('Failed to sign up. Please try again later.');
-		}
-	}, [session, signUpResponse]);
-
-	useEffect(() => {
-		if (session) redirect(callbackUrl);
 	}, [session]);
-	const handleSubmit = (e: FormEvent) => {
-		e.preventDefault();
+
+	const onSubmit = (data: User) => {
 		if (isLoading) return;
-		if (passwordRef.current !== confirmRef.current) {
-			setErrorMessage('Password do not match');
-			return;
-		}
-		mutate();
+
+		mutate(data);
 	};
+
 	return (session && status === 'authenticated') || status === 'loading' ? (
 		<></>
 	) : (
@@ -80,114 +69,158 @@ export default function SignIn() {
 			<form
 				method="post"
 				action="/api/auth/callback/credentials"
-				onSubmit={handleSubmit}
+				onSubmit={handleSubmit(onSubmit)}
 			>
+				{signUpResponse?.error && (
+					<Alert
+						className="w-full mb-5"
+						severity="error"
+					>
+						Failed to sign up. Please try again later.
+					</Alert>
+				)}
 				<FormControl className="form-control">
-					{errorMessage && (
-						<Alert
-							className="w-full mb-5"
-							severity="error"
-						>
-							{errorMessage}
-						</Alert>
-					)}
 					<TextField
-						name="firstName"
+						{...register('firstName')}
 						type="text"
 						label="First name"
 						variant="outlined"
 						size="small"
-						onChange={(e) => (firstNameRef.current = e.target.value)}
-						required
 					/>
+					{errors?.firstName && (
+						<Alert
+							className="w-full mt-2"
+							severity="error"
+						>
+							{errors.firstName.message}
+						</Alert>
+					)}
 				</FormControl>
 				<FormControl className="form-control">
 					<TextField
-						name="lastName"
+						{...register('lastName')}
 						type="text"
 						label="Last name"
 						variant="outlined"
 						size="small"
-						onChange={(e) => (lastNameRef.current = e.target.value)}
-						required
 					/>
+					{errors?.lastName && (
+						<Alert
+							className="w-full mt-2"
+							severity="error"
+						>
+							{errors.lastName.message}
+						</Alert>
+					)}
 				</FormControl>
 				<FormControl fullWidth>
 					<FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
 					<RadioGroup
 						row
-						aria-labelledby="demo-radio-buttons-group-label"
 						defaultValue="female"
-						name="radio-buttons-group"
-						onChange={(e) => (genderRef.current = e.target.value)}
 					>
 						<FormControlLabel
+							{...register('gender')}
 							value="m"
 							control={<Radio />}
 							label="Male"
 						/>
 						<FormControlLabel
+							{...register('gender')}
 							value="f"
 							control={<Radio />}
 							label="Female"
 						/>
 						<FormControlLabel
+							{...register('gender')}
 							value="o"
 							control={<Radio />}
 							label="Other"
 						/>
 					</RadioGroup>
+					{errors?.gender && (
+						<Alert
+							className="w-full mt-2"
+							severity="error"
+						>
+							{errors.gender.message}
+						</Alert>
+					)}
 				</FormControl>
 				<FormControl className="form-control">
 					<TextField
-						name="birthdate"
+						{...register('birthdate')}
 						type="date"
 						label="Birthday"
 						variant="outlined"
 						size="small"
-						onChange={(e) => (birthDateRef.current = e.target.value)}
-						required
 						InputLabelProps={{ shrink: true }}
 					/>
+					{errors?.birthdate && (
+						<Alert
+							className="w-full mt-2"
+							severity="error"
+						>
+							{errors.birthdate.message}
+						</Alert>
+					)}
 				</FormControl>
 				<FormControl className="form-control">
 					<TextField
-						name="email"
+						{...register('email')}
 						type="email"
 						label="Email"
 						variant="outlined"
 						size="small"
-						onChange={(e) => (emailRef.current = e.target.value)}
-						required
 					/>
+					{errors?.email && (
+						<Alert
+							className="w-full mt-2"
+							severity="error"
+						>
+							{errors.email.message}
+						</Alert>
+					)}
 				</FormControl>
 				<FormControl className="form-control">
 					<TextField
-						name="password"
+						{...register('password')}
 						type="password"
 						label="Password"
 						variant="outlined"
 						size="small"
-						onChange={(e) => (passwordRef.current = e.target.value)}
-						required
 					/>
+					{errors?.password && (
+						<Alert
+							className="w-full mt-2"
+							severity="error"
+						>
+							{errors.password.message}
+						</Alert>
+					)}
 				</FormControl>
 				<FormControl className="form-control">
 					<TextField
-						name="confirm"
+						{...register('confirm')}
 						type="password"
 						label="Confirm Password"
 						variant="outlined"
 						size="small"
-						onChange={(e) => (confirmRef.current = e.target.value)}
-						required
 					/>
+					{errors?.confirm && (
+						<Alert
+							className="w-full mt-2"
+							severity="error"
+						>
+							{errors.confirm.message}
+						</Alert>
+					)}
 				</FormControl>
 				<Button
 					type="submit"
 					variant="contained"
 					role="sign-up"
-					disabled={isLoading}
+					disabled={isLoading || isSubmitting}
 				>
 					Sign Up
 				</Button>
