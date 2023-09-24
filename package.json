@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@hookform/resolvers": "^3.3.1",
     "@mui/material": "^5.14.2",
     "@types/node": "20.4.5",
     "@types/react": "18.2.17",
@@ -29,7 +30,8 @@
     "react-icons": "^4.10.1",
     "react-query": "^3.39.3",
     "tailwindcss": "3.3.3",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "sass": "^1.64.1"

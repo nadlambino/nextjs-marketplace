@@ -15,7 +15,8 @@ import { useMutation } from 'react-query/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { Credentials } from '@/types';
+import { Credentials, CredentialsSchema } from '@/types';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function SignIn() {
 	const router = useRouter();
@@ -27,9 +28,9 @@ export default function SignIn() {
 		isLoading,
 		data: signInResponse,
 	} = useMutation({
-		mutationFn: (data: Credentials) =>
+		mutationFn: (credentials: Credentials) =>
 			signIn('credentials', {
-				...data,
+				...credentials,
 				redirect: false,
 				callbackUrl,
 			}),
@@ -39,7 +40,9 @@ export default function SignIn() {
 		handleSubmit,
 		reset,
 		formState: { errors, isSubmitting },
-	} = useForm<Credentials>();
+	} = useForm<Credentials>({
+		resolver: zodResolver(CredentialsSchema),
+	});
 
 	useEffect(() => {
 		if (session) {
@@ -49,11 +52,10 @@ export default function SignIn() {
 		}
 	}, [session]);
 
-	const onSubmit = (data: Credentials) => {
+	const onSubmit = (credentials: Credentials) => {
 		if (Object.keys(errors).length > 0) return;
 
-		mutate(data);
-		console.log(signInResponse);
+		mutate(credentials);
 	};
 
 	return (session && status === 'authenticated') || status === 'loading' ? (
@@ -79,7 +81,7 @@ export default function SignIn() {
 						label="Email"
 						variant="outlined"
 						size="small"
-						{...register('email', { required: 'Email is required' })}
+						{...register('email')}
 					/>
 					{errors.email && (
 						<Alert
@@ -96,7 +98,7 @@ export default function SignIn() {
 						label="Password"
 						variant="outlined"
 						size="small"
-						{...register('password', { required: 'Password is required' })}
+						{...register('password')}
 					/>
 					{errors.password && (
 						<Alert
