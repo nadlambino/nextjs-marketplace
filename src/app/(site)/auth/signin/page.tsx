@@ -1,6 +1,6 @@
 'use client';
 import './../../../assets/styles/auth.scss';
-import { FormEvent, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { signIn } from 'next-auth/react';
 import { useSearchParams, redirect } from 'next/navigation';
@@ -14,11 +14,11 @@ import {
 import { useMutation } from 'react-query/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { Credentials } from '@/types';
 
 export default function SignIn() {
 	const router = useRouter();
-	const emailRef = useRef<string | null>(null);
-	const passwordRef = useRef<string | null>(null);
 	const searchParams = useSearchParams();
 	const callbackUrl = searchParams.get('callbackUrl') || '/';
 	const { data: session, status } = useSession();
@@ -27,27 +27,33 @@ export default function SignIn() {
 		isLoading,
 		data: signInResponse,
 	} = useMutation({
-		mutationFn: () =>
+		mutationFn: (data: Credentials) =>
 			signIn('credentials', {
-				email: emailRef.current,
-				password: passwordRef.current,
+				...data,
 				redirect: false,
 				callbackUrl,
 			}),
 	});
-	const error: boolean = signInResponse && signInResponse.error ? true : false;
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors, isSubmitting },
+	} = useForm<Credentials>();
 
 	useEffect(() => {
 		if (session) {
+			reset();
 			router.refresh();
 			redirect(callbackUrl);
 		}
 	}, [session]);
 
-	const handleSubmit = (e: FormEvent) => {
-		e.preventDefault();
-		if (isLoading) return;
-		mutate();
+	const onSubmit = (data: Credentials) => {
+		if (Object.keys(errors).length > 0) return;
+
+		mutate(data);
+		console.log(signInResponse);
 	};
 
 	return (session && status === 'authenticated') || status === 'loading' ? (
@@ -57,9 +63,9 @@ export default function SignIn() {
 			<form
 				method="post"
 				action="/api/auth/callback/credentials"
-				onSubmit={handleSubmit}
+				onSubmit={handleSubmit(onSubmit)}
 			>
-				{error && (
+				{signInResponse?.error && (
 					<Alert
 						className="w-full"
 						severity="error"
@@ -69,33 +75,43 @@ export default function SignIn() {
 				)}
 				<FormControl className="form-control">
 					<TextField
-						name="email"
 						type="email"
 						label="Email"
 						variant="outlined"
 						size="small"
-						onChange={(e) => (emailRef.current = e.target.value)}
-						required
-						error={error}
+						{...register('email', { required: 'Email is required' })}
 					/>
+					{errors.email && (
+						<Alert
+							className="w-full mt-2"
+							severity="error"
+						>
+							{errors.email.message}
+						</Alert>
+					)}
 				</FormControl>
 				<FormControl className="form-control">
 					<TextField
-						name="password"
 						type="password"
 						label="Password"
 						variant="outlined"
 						size="small"
-						onChange={(e) => (passwordRef.current = e.target.value)}
-						required
-						error={error}
+						{...register('password', { required: 'Password is required' })}
 					/>
+					{errors.password && (
+						<Alert
+							className="w-full mt-2"
+							severity="error"
+						>
+							{errors.password.message}
+						</Alert>
+					)}
 				</FormControl>
 				<Button
 					type="submit"
 					variant="contained"
 					role="sign-in"
-					disabled={isLoading}
+					disabled={isLoading || isSubmitting}
 				>
 					Sign In
 				</Button>
