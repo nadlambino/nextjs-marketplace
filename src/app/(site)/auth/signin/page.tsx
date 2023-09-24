@@ -3,7 +3,7 @@ import './../../../assets/styles/auth.scss';
 import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { signIn } from 'next-auth/react';
-import { useSearchParams, redirect } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import {
 	FormControl,
 	TextField,
@@ -48,7 +48,7 @@ export default function SignIn() {
 		if (session) {
 			reset();
 			router.refresh();
-			redirect(callbackUrl);
+			router.replace(callbackUrl);
 		}
 	}, [session]);
 
