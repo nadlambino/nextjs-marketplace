@@ -55,3 +55,24 @@ export type Credentials = z.infer<typeof CredentialsSchema>;
 export const UserSchema = UserBasicInfoSchema.and(CredentialsSchema);
 
 export type User = UserBasicInfo & Credentials;
+
+export const ProductSchema = z.object({
+	_id: z.string().optional(),
+	name: z.string().min(1, 'Name is required'),
+	sku: z.string().optional(),
+	description: z.string().optional(),
+	brand: z.string().optional(),
+	model: z.string().optional(),
+	manufacturer: z.string().optional(),
+	condition: z.number({ required_error: 'Condition is required' }),
+	categories: z.string().min(1, 'Category is required'),
+	weight: z.number().optional(),
+	dimension: z.string().optional(),
+	color: z.string().optional(),
+	material: z.string().optional(),
+	specs: z.string().optional(),
+	price: z.number({ required_error: 'Price is required' }),
+	quantity: z.number({ required_error: 'Price is required' }),
+});
+
+export type Product = z.infer<typeof ProductSchema>;

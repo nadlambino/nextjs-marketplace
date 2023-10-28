@@ -7,7 +7,6 @@ import {
 	DialogTitle,
 	DialogContent,
 	DialogActions,
-	Typography,
 	Button,
 	Autocomplete,
 	FormControl,
@@ -17,13 +16,14 @@ import {
 	Select,
 	TextField,
 	Container,
-	Grid,
-	FormHelperText,
 	OutlinedInput,
 	InputAdornment,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useStepper from '@/app/hooks/stepper';
+import { useForm } from 'react-hook-form';
+import { Product, ProductSchema } from '@/types';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 	'& .MuiDialogContent-root': {
@@ -64,6 +64,22 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 		handleComplete,
 		handleReset,
 	} = useStepper(['Details', 'Specifications', 'Pricing']);
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors, isSubmitting },
+	} = useForm<Product>({
+		resolver: zodResolver(ProductSchema),
+	});
+
+	React.useEffect(() => {
+		console.log(errors);
+	}, [errors]);
+
+	const onSubmit = (data: Product) => {
+		console.log(data);
+	};
 
 	const handleModalClose = () => {
 		handleClose();
@@ -88,16 +104,22 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 					<AiOutlineClose size={18} />
 				</IconButton>
 			</DialogTitle>
-			<DialogContent dividers>
-				<form className="flex gap-5 flex-col">
+			<form
+				method="post"
+				className="contents"
+				onSubmit={handleSubmit(onSubmit)}
+			>
+				<DialogContent dividers>
 					{StepperComponent}
 					<Container
-						className="flex flex-col gap-5 p-0"
+						className="flex flex-col gap-5 p-0 mt-5"
 						style={{ display: activeStep === 0 ? 'flex' : 'none' }}
 					>
 						<div className="flex gap-2">
 							<FormControl fullWidth>
 								<TextField
+									{...register('name')}
+									type="text"
 									label="Name"
 									variant="outlined"
 									size="small"
@@ -106,6 +128,8 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							</FormControl>
 							<FormControl fullWidth>
 								<TextField
+									{...register('sku')}
+									type="text"
 									label="SKU"
 									variant="outlined"
 									size="small"
@@ -115,6 +139,8 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 						</div>
 						<FormControl fullWidth>
 							<TextField
+								{...register('description')}
+								type="text"
 								label="Description"
 								variant="outlined"
 								size="small"
@@ -126,6 +152,8 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 						<div className="flex gap-2">
 							<FormControl fullWidth>
 								<TextField
+									{...register('brand')}
+									type="text"
 									label="Brand"
 									variant="outlined"
 									size="small"
@@ -134,6 +162,8 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							</FormControl>
 							<FormControl fullWidth>
 								<TextField
+									{...register('model')}
+									type="text"
 									label="Model"
 									variant="outlined"
 									size="small"
@@ -144,6 +174,8 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 						<div className="flex gap-2">
 							<FormControl fullWidth>
 								<TextField
+									{...register('manufacturer')}
+									type="text"
 									label="Manufacturer"
 									variant="outlined"
 									size="small"
@@ -156,8 +188,10 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							>
 								<InputLabel id="Product Condition">Condition</InputLabel>
 								<Select
+									{...register('condition')}
 									labelId="Product Condition"
 									label="Condition"
+									defaultValue=""
 								>
 									<MenuItem value={0}>Brand New</MenuItem>
 									<MenuItem value={1}>Slightly Used</MenuItem>
@@ -174,7 +208,9 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 								getOptionLabel={(option) => option}
 								renderInput={(params) => (
 									<TextField
+										{...register('categories')}
 										{...params}
+										type="text"
 										label="Categories"
 										variant="outlined"
 										size="small"
@@ -184,7 +220,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 						</FormControl>
 					</Container>
 					<Container
-						className="flex flex-col gap-5 p-0"
+						className="flex flex-col gap-5 p-0 mt-5"
 						style={{ display: activeStep === 1 ? 'flex' : 'none' }}
 					>
 						<div className="flex gap-2">
@@ -195,6 +231,9 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							>
 								<InputLabel htmlFor="input-weight">Weight</InputLabel>
 								<OutlinedInput
+									{...register('weight', {
+										valueAsNumber: true,
+									})}
 									type="number"
 									id="input-weight"
 									label="Weight"
@@ -216,6 +255,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									Dimension (width x height)
 								</InputLabel>
 								<OutlinedInput
+									{...register('dimension')}
 									id="input-dimension"
 									label="Dimension (width x height)"
 									endAdornment={
@@ -231,6 +271,8 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 						<div className="flex gap-2">
 							<FormControl fullWidth>
 								<TextField
+									{...register('color')}
+									type="text"
 									fullWidth
 									label="Color"
 									size="small"
@@ -239,6 +281,8 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							</FormControl>
 							<FormControl fullWidth>
 								<TextField
+									{...register('material')}
+									type="text"
 									fullWidth
 									label="Material"
 									size="small"
@@ -248,6 +292,8 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 						</div>
 						<FormControl fullWidth>
 							<TextField
+								{...register('specs')}
+								type="text"
 								label="Other Specifications"
 								variant="outlined"
 								size="small"
@@ -258,7 +304,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 						</FormControl>
 					</Container>
 					<Container
-						className="flex flex-col gap-5 p-0"
+						className="flex flex-col gap-5 p-0 mt-5"
 						style={{ display: activeStep === 2 ? 'flex' : 'none' }}
 					>
 						<div className="flex gap-2">
@@ -269,6 +315,9 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							>
 								<InputLabel htmlFor="input-weight">Price</InputLabel>
 								<OutlinedInput
+									{...register('price', {
+										valueAsNumber: true,
+									})}
 									type="number"
 									id="input-price"
 									label="Price"
@@ -283,6 +332,9 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							</FormControl>
 							<FormControl fullWidth>
 								<TextField
+									{...register('quantity', {
+										valueAsNumber: true,
+									})}
 									type="number"
 									label="Quantity"
 									variant="outlined"
@@ -292,52 +344,51 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							</FormControl>
 						</div>
 					</Container>
-				</form>
-			</DialogContent>
-			<DialogActions>
-				<Button
-					variant="outlined"
-					onClick={handleModalClose}
-					className="w-24"
-				>
-					Cancel
-				</Button>
-
-				{activeStep > 0 && (
+				</DialogContent>
+				<DialogActions>
 					<Button
+						type="button"
 						variant="outlined"
-						onClick={handleBack}
+						onClick={handleModalClose}
 						className="w-24"
 					>
-						Back
+						Cancel
 					</Button>
-				)}
-				{isLastStep ? (
-					<Button
-						autoFocus
-						type="submit"
-						role="create-product-button"
-						variant="contained"
-						color="primary"
-						className="bg-primary w-24"
-						onClick={handleClose}
-					>
-						Save
-					</Button>
-				) : (
-					<Button
-						autoFocus
-						type="submit"
-						role="create-product-button"
-						variant="contained"
-						color="primary"
-						className="bg-primary w-24"
-						onClick={handleComplete}
-					>
-						Next
-					</Button>
-				)}
-			</DialogActions>
+
+					{activeStep > 0 && (
+						<Button
+							type="button"
+							variant="outlined"
+							onClick={handleBack}
+							className="w-24"
+						>
+							Back
+						</Button>
+					)}
+					{isLastStep ? (
+						<Button
+							type="submit"
+							role="create-product-button"
+							variant="contained"
+							color="primary"
+							className="bg-primary w-24"
+						>
+							Save
+						</Button>
+					) : (
+						<Button
+							type="button"
+							role="create-product-button"
+							variant="contained"
+							color="primary"
+							className="bg-primary w-24"
+							onClick={handleComplete}
+						>
+							Next
+						</Button>
+					)}
+				</DialogActions>
+			</form>
 		</BootstrapDialog>
 	);
 }
