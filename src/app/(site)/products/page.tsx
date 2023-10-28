@@ -417,10 +417,7 @@ const items: Item[] = [
 
 export default function Products() {
 	return (
-		<Box
-			sx={{ width: '100%', overflow: 'hidden' }}
-			className="flex flex-col gap-4"
-		>
+		<Box className="flex flex-col gap-4 h-full w-full overflow-hidden">
 			<Box className="flex justify-end">
 				<AddProductButton />
 			</Box>

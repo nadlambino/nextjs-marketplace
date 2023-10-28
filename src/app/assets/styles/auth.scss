@@ -1,16 +1,16 @@
 section.auth {
-  @apply flex justify-center items-start;
-}
+	@apply flex justify-center items-start;
 
-form {
-  @apply flex flex-col gap-5 justify-center items-center min-h-[calc(100vh-3rem)] w-full max-w-md;
+	form {
+		@apply flex flex-col gap-5 justify-center items-center min-h-[calc(100vh-3rem)] w-full max-w-md;
 
-  .form-control {
-    @apply w-full;
-  }
+		.form-control {
+			@apply w-full;
+		}
 
-  [role='sign-in'],
-  [role='sign-up'] {
-    @apply w-full;
-  }
+		[role='sign-in'],
+		[role='sign-up'] {
+			@apply w-full;
+		}
+	}
 }
