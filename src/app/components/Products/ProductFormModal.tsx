@@ -109,6 +109,11 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 	};
 
 	const onSubmit = (data: Product) => {
+		if (!isLastStep) {
+			handleComplete();
+			return;
+		}
+
 		console.log(data);
 	};
 
