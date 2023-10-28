@@ -6,7 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import AddProductButton from '@/app/components/Products/AddProductButton';
-import { Box } from '@mui/material';
+import { Box, TableContainer } from '@mui/material';
 
 type Condition = 'new' | 'used';
 
@@ -417,44 +417,49 @@ const items: Item[] = [
 
 export default function Products() {
 	return (
-		<Paper sx={{ width: '100%', overflow: 'hidden', mt: 8, mb: 3 }}>
-			<Box className="p-5">
+		<Box
+			sx={{ width: '100%', overflow: 'hidden' }}
+			className="flex flex-col gap-4"
+		>
+			<Box className="flex justify-end">
 				<AddProductButton />
 			</Box>
-			<Table
-				stickyHeader
-				aria-label="sticky table"
-			>
-				<TableHead>
-					<TableRow>
-						<TableCell>ID</TableCell>
-						<TableCell>Name</TableCell>
-						<TableCell>Description</TableCell>
-						<TableCell>Category</TableCell>
-						<TableCell>Condition</TableCell>
-						<TableCell>Quantity</TableCell>
-						<TableCell>Price</TableCell>
-						<TableCell>Estimated Sale</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{items.map((item) => (
-						<TableRow
-							hover
-							key={item._id}
-						>
-							<TableCell>{item._id}</TableCell>
-							<TableCell>{item.name}</TableCell>
-							<TableCell>{item.description}</TableCell>
-							<TableCell>{item.category}</TableCell>
-							<TableCell>{item.condition}</TableCell>
-							<TableCell>{item.quantity}</TableCell>
-							<TableCell>{item.price}</TableCell>
-							<TableCell>{(item.price * item.quantity).toFixed(2)}</TableCell>
+			<TableContainer sx={{ maxHeight: '100%' }}>
+				<Table
+					stickyHeader
+					aria-label="sticky table"
+				>
+					<TableHead>
+						<TableRow>
+							<TableCell>ID</TableCell>
+							<TableCell>Name</TableCell>
+							<TableCell>Description</TableCell>
+							<TableCell>Category</TableCell>
+							<TableCell>Condition</TableCell>
+							<TableCell>Quantity</TableCell>
+							<TableCell>Price</TableCell>
+							<TableCell>Estimated Sale</TableCell>
 						</TableRow>
-					))}
-				</TableBody>
-			</Table>
-		</Paper>
+					</TableHead>
+					<TableBody>
+						{items.map((item) => (
+							<TableRow
+								hover
+								key={item._id}
+							>
+								<TableCell>{item._id}</TableCell>
+								<TableCell>{item.name}</TableCell>
+								<TableCell>{item.description}</TableCell>
+								<TableCell>{item.category}</TableCell>
+								<TableCell>{item.condition}</TableCell>
+								<TableCell>{item.quantity}</TableCell>
+								<TableCell>{item.price}</TableCell>
+								<TableCell>{(item.price * item.quantity).toFixed(2)}</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</TableContainer>
+		</Box>
 	);
 }

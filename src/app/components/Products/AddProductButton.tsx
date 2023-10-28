@@ -26,6 +26,7 @@ function AddProductButton() {
 	const handleClickOpen = () => {
 		setOpen(true);
 	};
+
 	const handleClose = () => {
 		setOpen(false);
 	};
@@ -34,7 +35,6 @@ function AddProductButton() {
 		<>
 			<Button
 				variant="outlined"
-				className="bg-primary text-light hover:bg-primary/90"
 				startIcon={<AiOutlineAppstoreAdd size={18} />}
 				onClick={handleClickOpen}
 			>
@@ -43,7 +43,6 @@ function AddProductButton() {
 			<BootstrapDialog
 				fullWidth
 				maxWidth="xl"
-				onClose={handleClose}
 				aria-labelledby="customized-dialog-title"
 				open={open}
 			>
@@ -57,27 +56,9 @@ function AddProductButton() {
 						<AiOutlineClose size={18} />
 					</IconButton>
 				</DialogTitle>
-				<DialogContent dividers>
-					<Typography gutterBottom>
-						Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-						dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-						ac consectetur ac, vestibulum at eros.
-					</Typography>
-					<Typography gutterBottom>
-						Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-						Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-						auctor.
-					</Typography>
-					<Typography gutterBottom>
-						Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
-						cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
-						dui. Donec ullamcorper nulla non metus auctor fringilla.
-					</Typography>
-				</DialogContent>
+				<DialogContent dividers></DialogContent>
 				<DialogActions>
 					<Button
-						autoFocus
-						className="bg-light text-primary"
 						variant="outlined"
 						onClick={handleClose}
 					>
@@ -85,8 +66,7 @@ function AddProductButton() {
 					</Button>
 					<Button
 						autoFocus
-						className="bg-primary text-light hover:bg-primary/90"
-						variant="outlined"
+						variant="contained"
 						onClick={handleClose}
 					>
 						Save
