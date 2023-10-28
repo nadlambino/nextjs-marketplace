@@ -1,13 +1,14 @@
+'use client';
+
 import React from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import {
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+	Typography,
+	Button,
 	Autocomplete,
 	FormControl,
 	IconButton,
@@ -15,7 +16,14 @@ import {
 	MenuItem,
 	Select,
 	TextField,
+	Container,
+	Grid,
+	FormHelperText,
+	OutlinedInput,
+	InputAdornment,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import useStepper from '@/app/hooks/stepper';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 	'& .MuiDialogContent-root': {
@@ -48,13 +56,27 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 		'Office Products',
 		'Food & Grocery',
 	];
+	const {
+		StepperComponent,
+		activeStep,
+		isLastStep,
+		handleBack,
+		handleComplete,
+		handleReset,
+	} = useStepper(['Details', 'Specifications', 'Pricing']);
+
+	const handleModalClose = () => {
+		handleClose();
+		handleReset();
+	};
 
 	return (
 		<BootstrapDialog
 			fullWidth
-			maxWidth="sm"
+			maxWidth="md"
 			aria-labelledby="Add Product"
 			open={isOpen}
+			PaperProps={{ sx: { height: '560px' } }}
 		>
 			<DialogTitle
 				sx={{ m: 0, p: 2 }}
@@ -62,27 +84,35 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 				className="flex justify-between"
 			>
 				<span>Add Product</span>
-				<IconButton onClick={handleClose}>
+				<IconButton onClick={handleModalClose}>
 					<AiOutlineClose size={18} />
 				</IconButton>
 			</DialogTitle>
 			<DialogContent dividers>
-				<form>
-					<div className="section flex flex-col gap-5">
-						<Typography
-							variant="subtitle2"
-							className="text-gray-500 uppercase tracking-widest font-semibold -mb-3"
-						>
-							Details
-						</Typography>
-						<FormControl fullWidth>
-							<TextField
-								label="Name"
-								variant="outlined"
-								size="small"
-								fullWidth
-							/>
-						</FormControl>
+				<form className="flex gap-5 flex-col">
+					{StepperComponent}
+					<Container
+						className="flex flex-col gap-5 p-0"
+						style={{ display: activeStep === 0 ? 'flex' : 'none' }}
+					>
+						<div className="flex gap-2">
+							<FormControl fullWidth>
+								<TextField
+									label="Name"
+									variant="outlined"
+									size="small"
+									fullWidth
+								/>
+							</FormControl>
+							<FormControl fullWidth>
+								<TextField
+									label="SKU"
+									variant="outlined"
+									size="small"
+									fullWidth
+								/>
+							</FormControl>
+						</div>
 						<FormControl fullWidth>
 							<TextField
 								label="Description"
@@ -93,6 +123,48 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 								rows={4}
 							/>
 						</FormControl>
+						<div className="flex gap-2">
+							<FormControl fullWidth>
+								<TextField
+									label="Brand"
+									variant="outlined"
+									size="small"
+									fullWidth
+								/>
+							</FormControl>
+							<FormControl fullWidth>
+								<TextField
+									label="Model"
+									variant="outlined"
+									size="small"
+									fullWidth
+								/>
+							</FormControl>
+						</div>
+						<div className="flex gap-2">
+							<FormControl fullWidth>
+								<TextField
+									label="Manufacturer"
+									variant="outlined"
+									size="small"
+									fullWidth
+								/>
+							</FormControl>
+							<FormControl
+								fullWidth
+								size="small"
+							>
+								<InputLabel id="Product Condition">Condition</InputLabel>
+								<Select
+									labelId="Product Condition"
+									label="Condition"
+								>
+									<MenuItem value={0}>Brand New</MenuItem>
+									<MenuItem value={1}>Slightly Used</MenuItem>
+									<MenuItem value={2}>Old</MenuItem>
+								</Select>
+							</FormControl>
+						</div>
 						<FormControl fullWidth>
 							<Autocomplete
 								multiple
@@ -110,37 +182,161 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 								)}
 							/>
 						</FormControl>
-						<FormControl
-							fullWidth
-							size="small"
-						>
-							<InputLabel id="Product Condition">Condition</InputLabel>
-							<Select
-								labelId="Product Condition"
-								label="Condition"
+					</Container>
+					<Container
+						className="flex flex-col gap-5 p-0"
+						style={{ display: activeStep === 1 ? 'flex' : 'none' }}
+					>
+						<div className="flex gap-2">
+							<FormControl
+								variant="outlined"
+								size="small"
+								fullWidth
 							>
-								<MenuItem value={0}>Brand New</MenuItem>
-								<MenuItem value={1}>Slightly Used</MenuItem>
-								<MenuItem value={2}>Old</MenuItem>
-							</Select>
+								<InputLabel htmlFor="input-weight">Weight</InputLabel>
+								<OutlinedInput
+									type="number"
+									id="input-weight"
+									label="Weight"
+									endAdornment={
+										<InputAdornment position="end">kg</InputAdornment>
+									}
+									aria-describedby="outlined-weight-helper-text"
+									inputProps={{
+										'aria-label': 'weight',
+									}}
+								/>
+							</FormControl>
+							<FormControl
+								variant="outlined"
+								size="small"
+								fullWidth
+							>
+								<InputLabel htmlFor="input-dimension">
+									Dimension (width x height)
+								</InputLabel>
+								<OutlinedInput
+									id="input-dimension"
+									label="Dimension (width x height)"
+									endAdornment={
+										<InputAdornment position="end">in</InputAdornment>
+									}
+									aria-describedby="outlined-dimension-helper-text"
+									inputProps={{
+										'aria-label': 'dimension',
+									}}
+								/>
+							</FormControl>
+						</div>
+						<div className="flex gap-2">
+							<FormControl fullWidth>
+								<TextField
+									fullWidth
+									label="Color"
+									size="small"
+									variant="outlined"
+								/>
+							</FormControl>
+							<FormControl fullWidth>
+								<TextField
+									fullWidth
+									label="Material"
+									size="small"
+									variant="outlined"
+								/>
+							</FormControl>
+						</div>
+						<FormControl fullWidth>
+							<TextField
+								label="Other Specifications"
+								variant="outlined"
+								size="small"
+								fullWidth
+								multiline
+								rows={4}
+							/>
 						</FormControl>
-					</div>
+					</Container>
+					<Container
+						className="flex flex-col gap-5 p-0"
+						style={{ display: activeStep === 2 ? 'flex' : 'none' }}
+					>
+						<div className="flex gap-2">
+							<FormControl
+								variant="outlined"
+								size="small"
+								fullWidth
+							>
+								<InputLabel htmlFor="input-weight">Price</InputLabel>
+								<OutlinedInput
+									type="number"
+									id="input-price"
+									label="Price"
+									endAdornment={
+										<InputAdornment position="start">₱</InputAdornment>
+									}
+									aria-describedby="outlined-price-helper-text"
+									inputProps={{
+										'aria-label': 'price',
+									}}
+								/>
+							</FormControl>
+							<FormControl fullWidth>
+								<TextField
+									type="number"
+									label="Quantity"
+									variant="outlined"
+									size="small"
+									fullWidth
+								/>
+							</FormControl>
+						</div>
+					</Container>
 				</form>
 			</DialogContent>
 			<DialogActions>
 				<Button
 					variant="outlined"
-					onClick={handleClose}
+					onClick={handleModalClose}
+					className="w-24"
 				>
 					Cancel
 				</Button>
-				<Button
-					autoFocus
-					variant="contained"
-					onClick={handleClose}
-				>
-					Save
-				</Button>
+
+				{activeStep > 0 && (
+					<Button
+						variant="outlined"
+						onClick={handleBack}
+						className="w-24"
+					>
+						Back
+					</Button>
+				)}
+				{isLastStep ? (
+					<Button
+						autoFocus
+						type="submit"
+						role="create-product-button"
+						variant="contained"
+						color="primary"
+						className="bg-primary w-24"
+						onClick={handleClose}
+					>
+						Save
+					</Button>
+				) : (
+					<Button
+						autoFocus
+						type="submit"
+						role="create-product-button"
+						variant="contained"
+						color="primary"
+						className="bg-primary w-24"
+						onClick={handleComplete}
+					>
+						Next
+					</Button>
+				)}
 			</DialogActions>
 		</BootstrapDialog>
 	);

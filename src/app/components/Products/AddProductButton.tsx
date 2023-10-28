@@ -19,7 +19,8 @@ function AddProductButton() {
 	return (
 		<>
 			<Button
-				variant="outlined"
+				variant="contained"
+				className="bg-primary"
 				startIcon={<AiOutlineAppstoreAdd size={18} />}
 				onClick={handleClickOpen}
 			>
