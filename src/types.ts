@@ -38,7 +38,8 @@ export const CredentialsSchema = z
 		password: z
 			.string()
 			.min(8, 'Password must be at least 8 characters')
-			.max(16, 'Password must be at maximum of 16 characters'),
+			.max(16, 'Password must be at maximum of 16 characters')
+			.optional(),
 		confirm: z.string().optional(),
 	})
 	.refine(
