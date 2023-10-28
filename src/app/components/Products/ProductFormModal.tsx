@@ -272,7 +272,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									type="number"
 									id="input-price"
 									label="Price"
-									endAdornment={
+									startAdornment={
 										<InputAdornment position="start">₱</InputAdornment>
 									}
 									aria-describedby="outlined-price-helper-text"
