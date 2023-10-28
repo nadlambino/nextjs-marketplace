@@ -25,7 +25,6 @@ import useStepper from '@/app/hooks/stepper';
 import { Controller, useForm } from 'react-hook-form';
 import { Product, ProductSchema } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 	'& .MuiDialogContent-root': {
@@ -41,23 +40,39 @@ type PropTypes = {
 	handleClose: () => void;
 };
 
+const categories = [
+	'Electronics',
+	'Clothing',
+	'Home & Kitchen',
+	'Books',
+	'Toys',
+	'Sports & Outdoors',
+	'Beauty & Personal Care',
+	'Health & Wellness',
+	'Automotive',
+	'Jewelry',
+	'Furniture',
+	'Garden & Outdoor',
+	'Office Products',
+	'Food & Grocery',
+];
+
+const stepFields = [
+	[
+		'name',
+		'sku',
+		'description',
+		'brand',
+		'model',
+		'manufacturer',
+		'condition',
+		'categories',
+	],
+	['weight', 'dimension', 'color', 'material', 'specs'],
+	['price', 'quantity'],
+];
+
 function ProductFormModal({ isOpen, handleClose }: PropTypes) {
-	const categories = [
-		'Electronics',
-		'Clothing',
-		'Home & Kitchen',
-		'Books',
-		'Toys',
-		'Sports & Outdoors',
-		'Beauty & Personal Care',
-		'Health & Wellness',
-		'Automotive',
-		'Jewelry',
-		'Furniture',
-		'Garden & Outdoor',
-		'Office Products',
-		'Food & Grocery',
-	];
 	const {
 		StepperComponent,
 		activeStep,
@@ -71,14 +86,27 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 		register,
 		handleSubmit,
 		reset,
-		formState: { errors, isSubmitting },
+		clearErrors,
+		formState: { errors, isDirty },
 	} = useForm<Product>({
 		resolver: zodResolver(ProductSchema),
 	});
 
 	React.useEffect(() => {
-		console.log(errors);
-	}, [errors]);
+		handleNextStep();
+	}, [errors, isDirty]);
+
+	const handleNextStep = () => {
+		const errorFields = new Set(Object.keys(errors));
+		const fields = stepFields[activeStep];
+		if (errorFields.size === 0 || fields === undefined) return;
+
+		const hasFormError = !fields?.some((field) => errorFields.has(field));
+		if (isDirty && hasFormError) {
+			handleComplete();
+			clearErrors();
+		}
+	};
 
 	const onSubmit = (data: Product) => {
 		console.log(data);
@@ -87,6 +115,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 	const handleModalClose = () => {
 		handleClose();
 		handleReset();
+		reset();
 	};
 
 	return (
@@ -127,6 +156,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									variant="outlined"
 									size="small"
 									fullWidth
+									error={errors?.name?.message !== undefined}
 								/>
 							</FormControl>
 							<FormControl fullWidth>
@@ -137,6 +167,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									variant="outlined"
 									size="small"
 									fullWidth
+									error={errors?.sku?.message !== undefined}
 								/>
 							</FormControl>
 						</div>
@@ -150,6 +181,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 								fullWidth
 								multiline
 								rows={4}
+								error={errors?.description?.message !== undefined}
 							/>
 						</FormControl>
 						<div className="flex gap-2">
@@ -161,6 +193,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									variant="outlined"
 									size="small"
 									fullWidth
+									error={errors?.brand?.message !== undefined}
 								/>
 							</FormControl>
 							<FormControl fullWidth>
@@ -171,6 +204,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									variant="outlined"
 									size="small"
 									fullWidth
+									error={errors?.model?.message !== undefined}
 								/>
 							</FormControl>
 						</div>
@@ -183,6 +217,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									variant="outlined"
 									size="small"
 									fullWidth
+									error={errors?.manufacturer?.message !== undefined}
 								/>
 							</FormControl>
 							<FormControl
@@ -195,10 +230,11 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									labelId="Product Condition"
 									label="Condition"
 									defaultValue=""
+									error={errors?.condition?.message !== undefined}
 								>
-									<MenuItem value={0}>Brand New</MenuItem>
-									<MenuItem value={1}>Slightly Used</MenuItem>
-									<MenuItem value={2}>Old</MenuItem>
+									<MenuItem value="new">New</MenuItem>
+									<MenuItem value="used">Used</MenuItem>
+									<MenuItem value="old">Old</MenuItem>
 								</Select>
 							</FormControl>
 						</div>
@@ -212,7 +248,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 										id="tags-standard"
 										freeSolo
 										options={categories}
-										onChange={(event, values) => onChange(values)}
+										onChange={(_, values) => onChange(values)}
 										getOptionLabel={(option) => option}
 										renderOption={(props, option) => {
 											return (
@@ -236,6 +272,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 										renderInput={(params) => (
 											<TextField
 												{...params}
+												error={errors?.categories?.message !== undefined}
 												type="text"
 												label="Categories"
 												variant="outlined"
@@ -263,6 +300,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									{...register('weight', {
 										valueAsNumber: true,
 									})}
+									error={errors?.weight?.message !== undefined}
 									type="number"
 									id="input-weight"
 									label="Weight"
@@ -285,6 +323,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 								</InputLabel>
 								<OutlinedInput
 									{...register('dimension')}
+									error={errors?.dimension?.message !== undefined}
 									id="input-dimension"
 									label="Dimension (width x height)"
 									endAdornment={
@@ -301,6 +340,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							<FormControl fullWidth>
 								<TextField
 									{...register('color')}
+									error={errors?.color?.message !== undefined}
 									type="text"
 									fullWidth
 									label="Color"
@@ -311,6 +351,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							<FormControl fullWidth>
 								<TextField
 									{...register('material')}
+									error={errors?.material?.message !== undefined}
 									type="text"
 									fullWidth
 									label="Material"
@@ -322,6 +363,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 						<FormControl fullWidth>
 							<TextField
 								{...register('specs')}
+								error={errors?.specs?.message !== undefined}
 								type="text"
 								label="Other Specifications"
 								variant="outlined"
@@ -347,6 +389,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									{...register('price', {
 										valueAsNumber: true,
 									})}
+									error={errors?.price?.message !== undefined}
 									type="number"
 									id="input-price"
 									label="Price"
@@ -364,6 +407,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									{...register('quantity', {
 										valueAsNumber: true,
 									})}
+									error={errors?.quantity?.message !== undefined}
 									type="number"
 									label="Quantity"
 									variant="outlined"
@@ -408,12 +452,11 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 					) : (
 						<Button
 							key="next"
-							type="button"
+							type="submit"
 							role="create-product-button"
 							variant="contained"
 							color="primary"
 							className="bg-primary w-24"
-							onClick={handleComplete}
 						>
 							Next
 						</Button>
