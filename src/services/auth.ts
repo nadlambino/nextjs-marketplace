@@ -1,7 +1,6 @@
 import User from '@/models/User';
 import connect from '@/utils/db';
-import { encrypt } from './encryption';
-import { verify } from './encryption';
+import { encrypt, verify } from './encryption';x
 import { Credentials, User as IUser } from '@/types';
 
 export const signIn = async (credentials: Credentials): Promise<IUser> => {
