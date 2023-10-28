@@ -18,12 +18,14 @@ import {
 	Container,
 	OutlinedInput,
 	InputAdornment,
+	Chip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useStepper from '@/app/hooks/stepper';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Product, ProductSchema } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 	'& .MuiDialogContent-root': {
@@ -65,6 +67,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 		handleReset,
 	} = useStepper(['Details', 'Specifications', 'Pricing']);
 	const {
+		control,
 		register,
 		handleSubmit,
 		reset,
@@ -200,20 +203,46 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							</FormControl>
 						</div>
 						<FormControl fullWidth>
-							<Autocomplete
-								multiple
-								id="tags-standard"
-								freeSolo
-								options={categories}
-								getOptionLabel={(option) => option}
-								renderInput={(params) => (
-									<TextField
-										{...register('categories')}
-										{...params}
-										type="text"
-										label="Categories"
-										variant="outlined"
-										size="small"
+							<Controller
+								control={control}
+								name="categories"
+								render={({ field: { onChange } }) => (
+									<Autocomplete
+										multiple
+										id="tags-standard"
+										freeSolo
+										options={categories}
+										onChange={(event, values) => onChange(values)}
+										getOptionLabel={(option) => option}
+										renderOption={(props, option) => {
+											return (
+												<li
+													{...props}
+													key={option}
+												>
+													{option}
+												</li>
+											);
+										}}
+										renderTags={(tagValue, getTagProps) => {
+											return tagValue.map((option, index) => (
+												<Chip
+													{...getTagProps({ index })}
+													key={option}
+													label={option}
+												/>
+											));
+										}}
+										renderInput={(params) => (
+											<TextField
+												{...params}
+												type="text"
+												label="Categories"
+												variant="outlined"
+												size="small"
+												onChange={onChange}
+											/>
+										)}
 									/>
 								)}
 							/>
@@ -367,6 +396,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 					)}
 					{isLastStep ? (
 						<Button
+							key="save"
 							type="submit"
 							role="create-product-button"
 							variant="contained"
@@ -377,6 +407,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 						</Button>
 					) : (
 						<Button
+							key="next"
 							type="button"
 							role="create-product-button"
 							variant="contained"

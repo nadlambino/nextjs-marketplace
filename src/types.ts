@@ -65,7 +65,7 @@ export const ProductSchema = z.object({
 	model: z.string().optional(),
 	manufacturer: z.string().optional(),
 	condition: z.number({ required_error: 'Condition is required' }),
-	categories: z.string().min(1, 'Category is required'),
+	categories: z.array(z.string()).min(1, 'Category is required'),
 	weight: z.number().optional(),
 	dimension: z.string().optional(),
 	color: z.string().optional(),
