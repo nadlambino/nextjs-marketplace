@@ -58,6 +58,19 @@ const ProductSchema = new mongoose.Schema(
       ref: 'User',
       required: true
     },
+    deliverable: {
+      type: Boolean,
+      default: false,
+    },
+    pickupable: {
+      type: Boolean,
+      default: false,
+    },
+    pickupLocation: {
+      establishment: String,
+      building: String,
+      address: String,
+    },
   },
   {
     timestamps: true,

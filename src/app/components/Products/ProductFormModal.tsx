@@ -72,7 +72,7 @@ const stepFields = [
 		'categories',
 	],
 	['weight', 'dimension', 'color', 'material', 'specs'],
-	['price', 'quantity'],
+	['price', 'quantity', 'deliverable', 'pickupable'],
 ];
 
 function ProductFormModal({ isOpen, handleClose }: PropTypes) {
@@ -472,7 +472,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									{...register('pickupLocation.establishment')}
 									error={errors?.pickupable?.message !== undefined}
 									type="text"
-									label="Address"
+									label="Establishment"
 									variant="outlined"
 									size="small"
 									fullWidth
@@ -481,7 +481,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									{...register('pickupLocation.building')}
 									error={errors?.pickupable?.message !== undefined}
 									type="text"
-									label="Address"
+									label="Building"
 									variant="outlined"
 									size="small"
 									fullWidth
@@ -490,7 +490,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									{...register('pickupLocation.address')}
 									error={errors?.pickupable?.message !== undefined}
 									type="text"
-									label="Address"
+									label="Exact Address"
 									variant="outlined"
 									size="small"
 									fullWidth

@@ -81,16 +81,15 @@ export const ProductSchema = z.object({
 		building: z.string(),
 		address: z.string(),
 	}).optional(),
-}).superRefine(({ pickupable, pickupLocation }, refinementContext) => {
-	if (pickupable === false) return true;
-
-	if (!pickupLocation?.establishment || !pickupLocation?.building || !pickupLocation?.address) {
-		return refinementContext.addIssue({
-			code: z.ZodIssueCode.custom,
-			message: 'Pickup location is required when pickup option is available.',
-			path: ['pickupable'],
-		});
+})
+.refine(
+	({ pickupable, pickupLocation }) => {
+		return (pickupable === false) || pickupLocation?.address && pickupLocation?.establishment && pickupLocation?.building
+	},
+	{
+		message: 'Pickup location is required when pickup option is available.',
+		path: ['pickupable'],
 	}
-});
+);
 
 export type Product = z.infer<typeof ProductSchema>;
