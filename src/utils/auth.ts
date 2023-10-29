@@ -1,6 +1,7 @@
 import { getUserByEmail, signIn, signUp } from '@/services/auth';
 import type { Awaitable, NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { NextResponse } from 'next/server';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -45,3 +46,9 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+export const unauthenticatedResponse = NextResponse.json({
+  message: "Unauthenticated."
+}, {
+  status: 401
+});
