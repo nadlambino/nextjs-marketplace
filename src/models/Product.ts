@@ -58,15 +58,12 @@ const ProductSchema = new mongoose.Schema(
       ref: 'User',
       required: true
     },
-    deliverable: {
-      type: Boolean,
-      default: false,
+    delivery: {
+      available: Boolean,
+      fee: Number,
     },
-    pickupable: {
-      type: Boolean,
-      default: false,
-    },
-    pickupLocation: {
+    pickup: {
+      available: Boolean,
       establishment: String,
       building: String,
       address: String,

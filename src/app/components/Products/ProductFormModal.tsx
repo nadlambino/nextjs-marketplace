@@ -72,7 +72,7 @@ const stepFields = [
 		'categories',
 	],
 	['weight', 'dimension', 'color', 'material', 'specs'],
-	['price', 'quantity', 'deliverable', 'pickupable'],
+	['price', 'quantity', 'deliverable', 'pickup', 'delivery'],
 ];
 
 function ProductFormModal({ isOpen, handleClose }: PropTypes) {
@@ -111,7 +111,6 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 	})
 
 	React.useEffect(() => {
-		console.log(errors);
 		handleNextStep();
 	}, [errors, isDirty]);
 
@@ -180,7 +179,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									variant="outlined"
 									size="small"
 									fullWidth
-									error={errors?.name?.message !== undefined}
+									error={errors?.name !== undefined}
 								/>
 							</FormControl>
 							<FormControl fullWidth>
@@ -191,7 +190,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									variant="outlined"
 									size="small"
 									fullWidth
-									error={errors?.sku?.message !== undefined}
+									error={errors?.sku !== undefined}
 								/>
 							</FormControl>
 						</div>
@@ -205,7 +204,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 								fullWidth
 								multiline
 								rows={4}
-								error={errors?.description?.message !== undefined}
+								error={errors?.description !== undefined}
 							/>
 						</FormControl>
 						<div className="flex gap-2">
@@ -217,7 +216,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									variant="outlined"
 									size="small"
 									fullWidth
-									error={errors?.brand?.message !== undefined}
+									error={errors?.brand !== undefined}
 								/>
 							</FormControl>
 							<FormControl fullWidth>
@@ -228,7 +227,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									variant="outlined"
 									size="small"
 									fullWidth
-									error={errors?.model?.message !== undefined}
+									error={errors?.model !== undefined}
 								/>
 							</FormControl>
 						</div>
@@ -241,7 +240,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									variant="outlined"
 									size="small"
 									fullWidth
-									error={errors?.manufacturer?.message !== undefined}
+									error={errors?.manufacturer !== undefined}
 								/>
 							</FormControl>
 							<FormControl
@@ -254,7 +253,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									labelId="Product Condition"
 									label="Condition"
 									defaultValue=""
-									error={errors?.condition?.message !== undefined}
+									error={errors?.condition !== undefined}
 								>
 									<MenuItem value="new">New</MenuItem>
 									<MenuItem value="used">Used</MenuItem>
@@ -296,7 +295,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 										renderInput={(params) => (
 											<TextField
 												{...params}
-												error={errors?.categories?.message !== undefined}
+												error={errors?.categories !== undefined}
 												type="text"
 												label="Categories"
 												variant="outlined"
@@ -322,7 +321,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 								<InputLabel htmlFor="input-weight">Weight</InputLabel>
 								<OutlinedInput
 									{...register('weight')}
-									error={errors?.weight?.message !== undefined}
+									error={errors?.weight !== undefined}
 									type="number"
 									id="input-weight"
 									label="Weight"
@@ -345,7 +344,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 								</InputLabel>
 								<OutlinedInput
 									{...register('dimension')}
-									error={errors?.dimension?.message !== undefined}
+									error={errors?.dimension !== undefined}
 									id="input-dimension"
 									label="Dimension (width x height)"
 									endAdornment={
@@ -362,7 +361,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							<FormControl fullWidth>
 								<TextField
 									{...register('color')}
-									error={errors?.color?.message !== undefined}
+									error={errors?.color !== undefined}
 									type="text"
 									fullWidth
 									label="Color"
@@ -373,7 +372,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							<FormControl fullWidth>
 								<TextField
 									{...register('material')}
-									error={errors?.material?.message !== undefined}
+									error={errors?.material !== undefined}
 									type="text"
 									fullWidth
 									label="Material"
@@ -385,7 +384,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 						<FormControl fullWidth>
 							<TextField
 								{...register('specs')}
-								error={errors?.specs?.message !== undefined}
+								error={errors?.specs !== undefined}
 								type="text"
 								label="Other Specifications"
 								variant="outlined"
@@ -411,7 +410,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									{...register('price', {
 										valueAsNumber: true,
 									})}
-									error={errors?.price?.message !== undefined}
+									error={errors?.price !== undefined}
 									type="number"
 									id="input-price"
 									label="Price"
@@ -429,7 +428,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									{...register('quantity', {
 										valueAsNumber: true,
 									})}
-									error={errors?.quantity?.message !== undefined}
+									error={errors?.quantity !== undefined}
 									type="number"
 									label="Quantity"
 									variant="outlined"
@@ -442,63 +441,97 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							<FormControl fullWidth>
 								<FormControlLabel
 									className="flex justify-between ml-2"
-									{...register('deliverable')}
-									control={<Switch color="primary" />}
-									label="Available for Delivery"
+									{...register('delivery.available')}
+									control={<Switch 
+										color="primary" 
+										value={deliverable}
+										onChange={(e) => {
+											setDeliverable(!deliverable)
+											setValue('delivery.available', !deliverable)
+										}}
+									/>}
+									label="For Delivery"
 									labelPlacement="start"
 								/>
 							</FormControl>
-							<FormControl fullWidth>
+							<FormControl
+								variant="outlined"
+								size="small"
+								fullWidth
+							>
+								<InputLabel htmlFor="input-shipping-fee">Shipping Fee</InputLabel>
+								<OutlinedInput
+									{...register('delivery.fee', {
+										valueAsNumber: true,
+									})}
+									error={errors?.delivery?.fee !== undefined}
+									type="number"
+									id="input-shipping-fee"
+									label="Shipping Fee"
+									startAdornment={
+										<InputAdornment position="start">₱</InputAdornment>
+									}
+									aria-describedby="outlined-shipping-fee-helper-text"
+									inputProps={{
+										'aria-label': 'shipping-fee',
+									}}
+									disabled={!deliverable}
+								/>
+							</FormControl>
+						</div>
+						<div className="flex gap-2">
+							<FormControl className='w-1/2'>
 								<FormControlLabel
 									className="flex justify-between ml-2"
 									control={<Switch 
 										color="primary" 
-										{...register('pickupable')}
+										{...register('pickup.available')}
 										value={pickupable}
 										onChange={(e) => {
 											setPickupable(!pickupable)
-											setValue('pickupable', !pickupable)
+											setValue('pickup.available', !pickupable)
 										}}
 										/>
 									}
-									label="Available for Pickup"
+									label="For Pickup"
 									labelPlacement="start"
 								/>
 							</FormControl>
-						</div>
-						{pickupable && (
-							<>
+							<div className='w-1/2 flex flex-col gap-5'>
 								<TextField
-									{...register('pickupLocation.establishment')}
-									error={errors?.pickupable?.message !== undefined}
+									{...register('pickup.establishment')}
+									error={errors?.pickup?.establishment !== undefined}
 									type="text"
 									label="Establishment"
 									variant="outlined"
 									size="small"
 									fullWidth
+									disabled={!pickupable}
 								/>
 								<TextField
-									{...register('pickupLocation.building')}
-									error={errors?.pickupable?.message !== undefined}
+									{...register('pickup.building')}
+									error={errors?.pickup?.building !== undefined}
 									type="text"
 									label="Building"
 									variant="outlined"
 									size="small"
 									fullWidth
+									disabled={!pickupable}
 								/>
 								<TextField
-									{...register('pickupLocation.address')}
-									error={errors?.pickupable?.message !== undefined}
+									{...register('pickup.address')}
+									error={errors?.pickup?.address !== undefined}
 									type="text"
-									label="Exact Address"
+									label="Complete Address"
 									variant="outlined"
 									size="small"
 									fullWidth
 									multiline
 									rows={4}
+									disabled={!pickupable}
 								/>
-							</>
-						)}
+							</div>
+						</div>
 					</Container>
 				</DialogContent>
 				<DialogActions>

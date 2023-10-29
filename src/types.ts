@@ -74,21 +74,31 @@ export const ProductSchema = z.object({
 	price: z.number({ required_error: 'Price is required' }),
 	quantity: z.number({ required_error: 'Price is required' }),
 	sellerId: z.string().optional().nullable(),
-	deliverable: z.boolean().default(false),
-	pickupable: z.boolean().or(z.literal('true')).default(false),
-	pickupLocation: z.object({
-		establishment: z.string(),
-		building: z.string(),
-		address: z.string(),
-	}).optional(),
+	delivery: z.object({
+		available: z.boolean().or(z.literal('true')).default(false),
+		fee: z.number().optional().nullable(),
+	}),
+	pickup: z.object({
+		available: z.boolean().or(z.literal('true')).default(false),
+		establishment: z.string().optional().nullable(),
+		building: z.string().optional().nullable(),
+		address: z.string().optional().nullable(),
+	}),
 })
+.refine(({ delivery: { available, fee } }) => {
+		return available === false || fee
+	}, {
+		message: 'Shipping fee is required when delivery option is available.',
+		path: ['delivery'],
+	}
+)
 .refine(
-	({ pickupable, pickupLocation }) => {
-		return (pickupable === false) || pickupLocation?.address && pickupLocation?.establishment && pickupLocation?.building
+	({ pickup: { available, establishment, building, address } }) => {
+		return (available === false) || address && establishment && building
 	},
 	{
 		message: 'Pickup location is required when pickup option is available.',
-		path: ['pickupable'],
+		path: ['pickup'],
 	}
 );
 
