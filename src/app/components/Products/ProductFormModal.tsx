@@ -314,9 +314,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							>
 								<InputLabel htmlFor="input-weight">Weight</InputLabel>
 								<OutlinedInput
-									{...register('weight', {
-										valueAsNumber: true,
-									})}
+									{...register('weight')}
 									error={errors?.weight?.message !== undefined}
 									type="number"
 									id="input-weight"
