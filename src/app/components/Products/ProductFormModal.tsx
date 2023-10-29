@@ -132,6 +132,8 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 			return;
 		}
 
+		if (isLoading) return;
+
 		mutate(data);
 	};
 
@@ -464,7 +466,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									{...register('delivery.fee', {
 										valueAsNumber: true,
 									})}
-									error={errors?.delivery?.fee !== undefined}
+									error={errors?.delivery !== undefined}
 									type="number"
 									id="input-shipping-fee"
 									label="Shipping Fee"
@@ -500,7 +502,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							<div className='w-1/2 flex flex-col gap-5'>
 								<TextField
 									{...register('pickup.establishment')}
-									error={errors?.pickup?.establishment !== undefined}
+									error={errors?.pickup !== undefined}
 									type="text"
 									label="Establishment"
 									variant="outlined"
@@ -510,7 +512,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 								/>
 								<TextField
 									{...register('pickup.building')}
-									error={errors?.pickup?.building !== undefined}
+									error={errors?.pickup !== undefined}
 									type="text"
 									label="Building"
 									variant="outlined"
@@ -520,7 +522,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 								/>
 								<TextField
 									{...register('pickup.address')}
-									error={errors?.pickup?.address !== undefined}
+									error={errors?.pickup !== undefined}
 									type="text"
 									label="Complete Address"
 									variant="outlined"
