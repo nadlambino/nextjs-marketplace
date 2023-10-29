@@ -25,6 +25,7 @@ import useStepper from '@/app/hooks/stepper';
 import { Controller, useForm } from 'react-hook-form';
 import { Product, ProductSchema } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from 'react-query';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 	'& .MuiDialogContent-root': {
@@ -91,6 +92,17 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 	} = useForm<Product>({
 		resolver: zodResolver(ProductSchema),
 	});
+	const {mutate, isLoading} = useMutation({
+		mutationFn: async (data: Product) => {
+			return await fetch('/api/products', {
+				method: 'POST',
+				headers: {
+					contentType: 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+		}
+	})
 
 	React.useEffect(() => {
 		handleNextStep();
@@ -114,7 +126,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 			return;
 		}
 
-		console.log(data);
+		mutate(data);
 	};
 
 	const handleModalClose = () => {

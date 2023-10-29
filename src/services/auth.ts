@@ -1,7 +1,7 @@
 import User from '@/models/User';
 import connect from '@/utils/db';
 import { encrypt, verify } from './encryption';
-import { Credentials, User as IUser } from '@/types';
+import { Credentials, User as IUser, UserBasicInfo } from '@/types';
 
 export const signIn = async (credentials: Credentials): Promise<IUser> => {
 	try {
@@ -43,7 +43,7 @@ export const getUserByEmail = async (email: string | undefined | null) => {
 	}
 };
 
-const filterUserInfo = (user: IUser) => {
+const filterUserInfo = (user: IUser) : IUser => {
 	return {
 		_id: user._id,
 		firstName: user.firstName,

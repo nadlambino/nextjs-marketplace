@@ -1,5 +1,6 @@
 import { getUserByEmail, signIn, signUp } from '@/services/auth';
-import type { Awaitable, NextAuthOptions } from 'next-auth';
+import { User } from '@/types';
+import { getServerSession, type Awaitable, type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextResponse } from 'next/server';
 
@@ -47,8 +48,10 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export const unauthenticatedResponse = NextResponse.json({
-  message: "Unauthenticated."
-}, {
-  status: 401
-});
+export const unauthenticatedResponse = NextResponse.json({message: "Unauthenticated."}, {status: 401});
+
+export async function getAuthenticatedUser() : Promise<User|undefined> {
+	const session = await getServerSession(authOptions);
+	
+  return session?.user as User;
+}
