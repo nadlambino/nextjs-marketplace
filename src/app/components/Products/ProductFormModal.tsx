@@ -19,6 +19,8 @@ import {
 	OutlinedInput,
 	InputAdornment,
 	Chip,
+	FormControlLabel,
+	Switch,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useStepper from '@/app/hooks/stepper';
@@ -81,17 +83,21 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 		handleBack,
 		handleComplete,
 		handleReset,
-	} = useStepper(['Details', 'Specifications', 'Pricing']);
+	} = useStepper(['Details', 'Specifications', 'Preferences']);
 	const {
 		control,
 		register,
 		handleSubmit,
 		reset,
 		clearErrors,
+		setValue,
+		getValues,
 		formState: { errors, isDirty },
 	} = useForm<Product>({
 		resolver: zodResolver(ProductSchema),
 	});
+	const [deliverable, setDeliverable] = React.useState(false);
+	const [pickupable, setPickupable] = React.useState(false);
 	const {mutate, isLoading} = useMutation({
 		mutationFn: async (data: Product) => {
 			return await fetch('/api/products', {
@@ -105,6 +111,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 	})
 
 	React.useEffect(() => {
+		console.log(errors);
 		handleNextStep();
 	}, [errors, isDirty]);
 
@@ -431,6 +438,67 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 								/>
 							</FormControl>
 						</div>
+						<div className="flex gap-2">
+							<FormControl fullWidth>
+								<FormControlLabel
+									className="flex justify-between ml-2"
+									{...register('deliverable')}
+									control={<Switch color="primary" />}
+									label="Available for Delivery"
+									labelPlacement="start"
+								/>
+							</FormControl>
+							<FormControl fullWidth>
+								<FormControlLabel
+									className="flex justify-between ml-2"
+									control={<Switch 
+										color="primary" 
+										{...register('pickupable')}
+										value={pickupable}
+										onChange={(e) => {
+											setPickupable(!pickupable)
+											setValue('pickupable', !pickupable)
+										}}
+										/>
+									}
+									label="Available for Pickup"
+									labelPlacement="start"
+								/>
+							</FormControl>
+						</div>
+						{pickupable && (
+							<>
+								<TextField
+									{...register('pickupLocation.establishment')}
+									error={errors?.pickupable?.message !== undefined}
+									type="text"
+									label="Address"
+									variant="outlined"
+									size="small"
+									fullWidth
+								/>
+								<TextField
+									{...register('pickupLocation.building')}
+									error={errors?.pickupable?.message !== undefined}
+									type="text"
+									label="Address"
+									variant="outlined"
+									size="small"
+									fullWidth
+								/>
+								<TextField
+									{...register('pickupLocation.address')}
+									error={errors?.pickupable?.message !== undefined}
+									type="text"
+									label="Address"
+									variant="outlined"
+									size="small"
+									fullWidth
+									multiline
+									rows={4}
+								/>
+							</>
+						)}
 					</Container>
 				</DialogContent>
 				<DialogActions>

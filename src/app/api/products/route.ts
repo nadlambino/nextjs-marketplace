@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
 
 	try {
 		const data = await request.json();
-		const product = await Product.create({...data, user: authUser._id })
+		const product = await Product.create({...data, sellerId: authUser._id })
 
 		return NextResponse.json(product, { status: 201 });
 	} catch(error) {

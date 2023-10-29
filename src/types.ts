@@ -73,6 +73,24 @@ export const ProductSchema = z.object({
 	specs: z.string().optional(),
 	price: z.number({ required_error: 'Price is required' }),
 	quantity: z.number({ required_error: 'Price is required' }),
+	sellerId: z.string().optional().nullable(),
+	deliverable: z.boolean().default(false),
+	pickupable: z.boolean().or(z.literal('true')).default(false),
+	pickupLocation: z.object({
+		establishment: z.string(),
+		building: z.string(),
+		address: z.string(),
+	}).optional(),
+}).superRefine(({ pickupable, pickupLocation }, refinementContext) => {
+	if (pickupable === false) return true;
+
+	if (!pickupLocation?.establishment || !pickupLocation?.building || !pickupLocation?.address) {
+		return refinementContext.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: 'Pickup location is required when pickup option is available.',
+			path: ['pickupable'],
+		});
+	}
 });
 
 export type Product = z.infer<typeof ProductSchema>;
