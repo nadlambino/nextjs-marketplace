@@ -28,6 +28,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Product, ProductSchema } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from 'react-query';
+import { toast } from 'react-toastify';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 	'& .MuiDialogContent-root': {
@@ -95,6 +96,11 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 	} = useForm<Product>({
 		resolver: zodResolver(ProductSchema),
 	});
+
+	React.useEffect(() => {
+		handleNextStep();
+	}, [errors, isDirty]);
+
 	const [deliverable, setDeliverable] = React.useState(false);
 	const [pickupable, setPickupable] = React.useState(false);
 	const {mutate, isLoading} = useMutation({
@@ -105,13 +111,23 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 					contentType: 'application/json'
 				},
 				body: JSON.stringify(data)
-			})
-		}
-	})
+			}).then(response => {
+				if (!response.ok) throw new Error();
 
-	React.useEffect(() => {
-		handleNextStep();
-	}, [errors, isDirty]);
+				return response.json();
+			});
+		},
+		onSuccess() {
+			toast('Successfully created a product', {
+				type: 'success'
+			})
+		},
+		onError() {
+			toast('Failed to create a product', {
+				type: 'error'
+			})
+		},
+	})
 
 	const handleNextStep = () => {
 		const errorFields = new Set(Object.keys(errors));
