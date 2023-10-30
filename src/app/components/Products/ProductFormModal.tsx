@@ -180,7 +180,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-						Confirm to save <span className="font-semibold text-primary">{getValues('name')} product</span>
+						Confirm to save <span className="font-semibold text-primary">{getValues('name')}</span> product
           </DialogContentText>
         </DialogContent>
         <DialogActions>
