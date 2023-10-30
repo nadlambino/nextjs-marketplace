@@ -22,6 +22,7 @@ import {
 	FormControlLabel,
 	Switch,
 	DialogContentText,
+	FormHelperText,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useStepper from '@/app/hooks/stepper';
@@ -193,7 +194,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 				maxWidth="md"
 				aria-labelledby="Add Product"
 				open={isOpen}
-				PaperProps={{ sx: { height: '560px' } }}
+				PaperProps={{ sx: { minHeight: '560px' } }}
 			>
 				<DialogTitle
 					sx={{ m: 0, p: 2 }}
@@ -352,6 +353,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 										/>
 									)}
 								/>
+								<FormHelperText>Add single or multiple categories. You can also type a new category and hit enter.</FormHelperText>
 							</FormControl>
 						</Container>
 						<Container
