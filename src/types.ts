@@ -65,7 +65,7 @@ export const ProductSchema = z.object({
 	model: z.string().optional(),
 	manufacturer: z.string().optional(),
 	condition: z.enum(['new', 'used', 'old']),
-	categories: z.array(z.string()),
+	categories: z.array(z.string()).min(1),
 	weight: z.string().optional(),
 	dimension: z.string().optional(),
 	color: z.string().optional(),

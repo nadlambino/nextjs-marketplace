@@ -91,7 +91,6 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 		reset,
 		clearErrors,
 		setValue,
-		getValues,
 		formState: { errors, isDirty },
 	} = useForm<Product>({
 		resolver: zodResolver(ProductSchema),
@@ -153,10 +152,10 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 		>
 			<DialogTitle
 				sx={{ m: 0, p: 2 }}
-				id="Add Product"
+				id="New Product"
 				className="flex justify-between"
 			>
-				<span>Add Product</span>
+				<span>New Product</span>
 				<IconButton onClick={handleModalClose}>
 					<AiOutlineClose size={18} />
 				</IconButton>
@@ -537,16 +536,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 					</Container>
 				</DialogContent>
 				<DialogActions>
-					<Button
-						type="button"
-						variant="outlined"
-						onClick={handleModalClose}
-						className="w-24"
-					>
-						Cancel
-					</Button>
-
-					{activeStep > 0 && (
+					{activeStep > 0 ? 
 						<Button
 							type="button"
 							variant="outlined"
@@ -554,8 +544,16 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 							className="w-24"
 						>
 							Back
+						</Button>: 
+						<Button
+							type="button"
+							variant="outlined"
+							onClick={handleModalClose}
+							className="w-24"
+						>
+							Cancel
 						</Button>
-					)}
+					}
 					{isLastStep ? (
 						<Button
 							key="save"
