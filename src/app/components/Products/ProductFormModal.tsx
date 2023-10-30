@@ -294,7 +294,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 									fullWidth
 									size="small"
 								>
-									<InputLabel id="Product Condition">Condition</InputLabel>
+									<InputLabel id="Product Condition" error={errors?.condition !== undefined}>Condition</InputLabel>
 									<Select
 										{...register('condition')}
 										labelId="Product Condition"

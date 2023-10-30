@@ -5,10 +5,9 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import AddProductButton from '@/app/components/Products/AddProductButton';
-import { Box, Chip, ChipPropsColorOverrides, TableContainer } from '@mui/material';
+import { Box, Chip, TableContainer } from '@mui/material';
 import { Product } from '@/types';
 import { getProducts } from '@/services/products';
-import { OverridableTypeMap } from '@mui/material/OverridableComponent';
 
 const conditionClassMap = {
 	new: 'success',
