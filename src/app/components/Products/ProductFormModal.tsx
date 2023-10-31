@@ -31,6 +31,7 @@ import { Product, ProductSchema } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 	'& .MuiDialogContent-root': {
@@ -79,6 +80,7 @@ const stepFields = [
 ];
 
 function ProductFormModal({ isOpen, handleClose }: PropTypes) {
+	const router = useRouter();
 	const {
 		StepperComponent,
 		activeStep,
@@ -159,6 +161,7 @@ function ProductFormModal({ isOpen, handleClose }: PropTypes) {
 	const handleFormSubmit = () => {
 		setOpenConfirm(false);
 		mutate(getValues());
+		router.refresh();
 	}
 
 	const handleModalClose = () => {

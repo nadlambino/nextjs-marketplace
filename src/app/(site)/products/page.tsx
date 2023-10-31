@@ -9,7 +9,7 @@ import { Box, Chip, TableContainer } from '@mui/material';
 import { Product } from '@/types';
 import { getProducts } from '@/services/products';
 
-const conditionClassMap = {
+const conditionMap = {
 	new: 'success',
 	used: 'warning',
 	old: 'error'
@@ -56,7 +56,7 @@ export default async function Products() {
 									<Chip 
 										size="small" 
 										label={product.condition} 
-										color={conditionClassMap[product.condition]} 
+										color={conditionMap[product.condition]} 
 										className="uppercase" 
 									/>
 								</TableCell>
